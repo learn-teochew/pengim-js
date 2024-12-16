@@ -178,6 +178,11 @@ function segmentPujSyllable(syllable) {
     res[1] = "";
     res[2] = "";
   }
+  // ng finals with no vowel
+  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
+    res[1] = res[1].slice(0,-2);
+    res[3] = "ng";
+  }
   return res;
 }
 
@@ -242,13 +247,18 @@ function pujToGdpi(syllable) {
 
 function parseGdpiSyllable(syllable) {
   // TODO handle error if syllable does not match regex
-  const gdpiRe = /^([^aêeiou]*)([aêeiou]*)([hbgmn]*)([012345678]*)$/;
+  const gdpiRe = /^([^aêeiou\d]*)([aêeiou]*)([hbgmn]*)([012345678]*)$/;
   let res = syllable.match(gdpiRe);
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
     res[3] = "ng";
     res[1] = "";
     res[2] = "";
+  }
+  // ng finals with no vowel
+  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
+    res[1] = res[1].slice(0,-2);
+    res[3] = "ng";
   }
   return [res[1], res[2], res[3], res[4]];
 }
@@ -289,6 +299,25 @@ function gdpiToPuj(syllable) {
   return withTone;
 }
 
+// Apply conversion to each word
+function convertWord(word, version) {
+  if (version == "gdpi2puj") {
+    return gdpiToPuj(word);
+  } else if (version == "puj2gdpi") {
+    return pujToGdpi(word);
+  }
+}
+
+// Apply conversion to entire line
+function convertLine(line, version) {
+  let result = [];
+  for (const word of splitText(line)) {
+    result.push(convertWord(word, version));
+  }
+  return result.join(" ");
+}
+
+
 // Main ----------------------------------------------------------------------
 
 // Create a readline interface to read lines from stdin
@@ -297,15 +326,6 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
-// Function to apply conversion to each word
-function convertWord(word) {
-  if (options.gdpi2puj) {
-    return gdpiToPuj(word);
-  } else if (options.puj2gdpi) {
-    return pujToGdpi(word);
-  }
-}
 
 if (!options.gdpi2puj && !options.puj2gdpi) {
   console.error("Please specify either -g or -p, see help with option -h");
@@ -316,14 +336,15 @@ if (!options.gdpi2puj && !options.puj2gdpi) {
 rl.question('Enter input (press CTRL+C to exit): ', (lines) => {
   // Split the lines by newline character
   const linesArr = lines.split('\n');
-  
   // Loop through each line and apply convertWord function
   for (let i = 0; i < linesArr.length; i++) {
-    let result = [];
-    for (const word of splitText(linesArr[i])) {
-      result.push(convertWord(word));
+    let out = "";
+    if (options.gdpi2puj) {
+      out = convertLine(linesArr[i], "gdpi2puj");
+    } else if (options.puj2gdpi) {
+      out = convertLine(linesArr[i], "puj2gdpi");
     }
-    console.log(result);
+    console.log(out);
   }
   
   // Close the readline interface
