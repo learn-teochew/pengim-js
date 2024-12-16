@@ -15,6 +15,7 @@ node pengim.js -h
 
 Script in the webpage `index.html`.
 
+For offline testing, fire up a server on localhost first (e.g. `python3 -m http.server`).
 
 ## TODO
 
