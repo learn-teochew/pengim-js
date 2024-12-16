@@ -1,3 +1,14 @@
+const commander = require('commander');
+
+commander
+  .version('1.0.0', '-v, --version')
+  .usage('[OPTIONS]...')
+  .option('-g, --gdpi2puj', 'Convert from Guangdong Pêng-im to Pe̍h-ūe-jī')
+  .option('-p, --puj2gdpi', 'Convert from Pe̍h-ūe-jī to Guangdong Pêng-im')
+  .parse(process.argv);
+
+const options = commander.opts();
+
 // Data -----------------------------------------------------------------------
 
 const pujCodeToNumber = {
@@ -186,7 +197,7 @@ function parsePujSyllable(syllable) {
         // combining diaeresis below
         strippedWord += wordNormalized[i];
       } else {
-        console.log("Diacritic not used in PUJ: " + charCode);
+        console.error("Diacritic not used in PUJ: " + charCode);
         toneNumber = -1;
       }
     } else {
@@ -208,21 +219,30 @@ function parsePujSyllable(syllable) {
 function pujToPujn(syllable) {
   // PUJ with tone diacritics to PUJ with tone number
   res = parsePujSyllable(syllable);
-  return res.join("");
+  if (res[3] == -1) {
+    return "[" + syllable  + "]";
+  } else {
+    return res.join("");
+  }
 }
 
 function pujToGdpi(syllable) {
   // PUJ with tone diacritics to GDPI
   res = parsePujSyllable(syllable);
-  res[0] = initialPujToGdpi[res[0]];
-  res[1] = medialPujToGdpi[res[1]];
-  res[2] = codaPujToGdpi[res[2]];
-  return res.join("");
+  if (res[3] == -1) {
+    return "[" + syllable  + "]";
+  } else {
+    // TODO Catch exception if segments not in dicts
+    res[0] = initialPujToGdpi[res[0]];
+    res[1] = medialPujToGdpi[res[1]];
+    res[2] = codaPujToGdpi[res[2]];
+    return res.join("");
+  }
 }
 
 function parseGdpiSyllable(syllable) {
   // TODO handle error if syllable does not match regex
-  const gdpiRe = /^([^aêeiou]*)([aêeiou]*)([hbgmn]*)([0123456789]+)$/;
+  const gdpiRe = /^([^aêeiou]*)([aêeiou]*)([hbgmn]*)([012345678]*)$/;
   let res = syllable.match(gdpiRe);
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
@@ -235,7 +255,9 @@ function parseGdpiSyllable(syllable) {
 
 function gdpiToPuj(syllable) {
   // GDPI to PUJ with tone diacritics
+  // TODO add option to analyze without tones
   res = parseGdpiSyllable(syllable);
+  // TODO Catch exception if segments not in dicts
   res[0] = initialGdpiToPuj[res[0]];
   res[1] = medialGdpiToPuj[res[1]];
   res[2] = codaGdpiToPuj[res[2]];
@@ -278,12 +300,20 @@ const rl = readline.createInterface({
 
 // Function to apply conversion to each word
 function convertWord(word) {
-  return gdpiToPuj(word);
-  // return pujToGdpi(word);
+  if (options.gdpi2puj) {
+    return gdpiToPuj(word);
+  } else if (options.puj2gdpi) {
+    return pujToGdpi(word);
+  }
+}
+
+if (!options.gdpi2puj && !options.puj2gdpi) {
+  console.error("Please specify either -g or -p, see help with option -h");
+  process.exit(1);
 }
 
 // Prompt user to enter lines
-rl.question('Enter lines (press CTRL+C to exit): ', (lines) => {
+rl.question('Enter input (press CTRL+C to exit): ', (lines) => {
   // Split the lines by newline character
   const linesArr = lines.split('\n');
   

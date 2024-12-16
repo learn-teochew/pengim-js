@@ -1,0 +1,14 @@
+{
+  "name": "pengim",
+  "version": "1.0.0",
+  "description": "Convert between Teochew romanization systems",
+  "main": "pengim.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brandon Seah",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^7.2.0"
+  }
+}
