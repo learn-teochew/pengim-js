@@ -1,3 +1,5 @@
+// Data -----------------------------------------------------------------------
+
 const pujCodeToNumber = {
   0x301 : 2,
   0x300 : 3,
@@ -142,6 +144,7 @@ const codaGdpiToPuj = {
   "nh": "ⁿh" 
 }
 
+// Functions ------------------------------------------------------------------
 
 function splitText(text) {
   // TODO Split on punctuation and spaces but retain them
@@ -202,7 +205,14 @@ function parsePujSyllable(syllable) {
   return [res[1], res[2], res[3], toneNumber];
 }
 
+function pujToPujn(syllable) {
+  // PUJ with tone diacritics to PUJ with tone number
+  res = parsePujSyllable(syllable);
+  return res.join("");
+}
+
 function pujToGdpi(syllable) {
+  // PUJ with tone diacritics to GDPI
   res = parsePujSyllable(syllable);
   res[0] = initialPujToGdpi[res[0]];
   res[1] = medialPujToGdpi[res[1]];
@@ -224,14 +234,40 @@ function parseGdpiSyllable(syllable) {
 }
 
 function gdpiToPuj(syllable) {
+  // GDPI to PUJ with tone diacritics
   res = parseGdpiSyllable(syllable);
   res[0] = initialGdpiToPuj[res[0]];
   res[1] = medialGdpiToPuj[res[1]];
   res[2] = codaGdpiToPuj[res[2]];
-  return res.join("");
+  toneless = res.slice(0,3).join("");
+  // Add tone diacritic according to orthographic rules
+  let toneLetterIndex = -1;
+  // Add diacritic on first vowel that is not i
+  if (toneless.match(/[aeouṳ]/)) {
+    toneLetterIndex = toneless.match(/[aeouṳ]/).index;
+  } else if (toneless.match(/i/)) {
+    // Else on first i
+    toneLetterIndex = toneless.match(/i/).index;
+  } else if (toneless.match(/[nm]/)) {
+    // Else on first n or m
+    toneLetterIndex = toneless.match(/[nm]/).index;
+  }
+  pre = toneless.slice(0,toneLetterIndex+1);
+  post = "";
+  if (toneless.length > toneLetterIndex + 1) {
+    post = toneless.slice(toneLetterIndex+1,);
+  }
+  // Default no diacritic for tones 1 and 4
+  let toneDiacritic = "";
+  if (res[3] in pujNumberToCode) {
+    toneCodePoint = pujNumberToCode[res[3]];
+    toneDiacritic = String.fromCodePoint(toneCodePoint);
+  }
+  let withTone = [pre, toneDiacritic, post].join("").normalize("NFC");
+  return withTone;
 }
 
-// main ----------------------------------------------------------------------
+// Main ----------------------------------------------------------------------
 
 // Create a readline interface to read lines from stdin
 const readline = require('readline');
