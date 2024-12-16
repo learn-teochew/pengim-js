@@ -9,6 +9,15 @@ const pujCodeToNumber = {
   0x30D : 8
 };
 
+const pujNumberToCode = {
+  2 : 0x301 ,
+  3 : 0x300 ,
+  5 : 0x302 ,
+  6 : 0x306 ,
+  7 : 0x304 ,
+  8 : 0x30D 
+};
+
 const initialPujToGdpi = {
   ""    : ""  ,
   "p"   : "b" ,
@@ -73,6 +82,66 @@ const codaPujToGdpi = {
   "ⁿ"  : "n" ,
   "ⁿh" : "nh"
 }
+
+const initialGdpiToPuj = {
+  ""  : ""    ,
+  "b" : "p"   ,
+  "p" : "ph"  ,
+  "bh": "b"   ,
+  "m" : "m"   ,
+  "d" : "t"   ,
+  "t" : "th"  ,
+  "n" : "n"   ,
+  "l" : "l"   ,
+  "z" : "ts"  ,
+  "c" : "tsh" ,
+  "s" : "s"   ,
+  "r" : "j"   ,
+  "g" : "k"   ,
+  "k" : "kh"  ,
+  "gh": "g"   ,
+  "ng": "ng"  ,
+  "h" : "h"   
+}
+
+const medialGdpiToPuj = {
+  ""   : ""    ,
+  "a"  : "a"   ,
+  "o"  : "o"   ,
+  "ê"  : "e"   ,
+  "e"  : "ṳ"   ,
+  "ai" : "ai"  ,
+  "oi" : "oi"  ,
+  "êi" : "ei"  ,
+  "ao" : "au"  ,
+  "ou" : "ou"  ,
+  "i"  : "i"   ,
+  "ia" : "ia"  ,
+  "io" : "io"  ,
+  "iê" : "ie"  ,
+  "iou": "iou" ,
+  "iêu": "ieu" ,
+  "iao": "iau" ,
+  "iu" : "iu"  ,
+  "u"  : "u"   ,
+  "ua" : "ua"  ,
+  "uê" : "ue"  ,
+  "uai": "uai" ,
+  "uêi": "uei" ,
+  "ui" : "ui"  
+}
+
+const codaGdpiToPuj = {
+  ""  : ""   ,
+  "h" : "h"  ,
+  "b" : "p"  ,
+  "m" : "m"  ,
+  "ng": "ng" ,
+  "g" : "k"  ,
+  "n" : "ⁿ"  ,
+  "nh": "ⁿh" 
+}
+
 
 function splitText(text) {
   // TODO Split on punctuation and spaces but retain them
@@ -141,6 +210,27 @@ function pujToGdpi(syllable) {
   return res.join("");
 }
 
+function parseGdpiSyllable(syllable) {
+  // TODO handle error if syllable does not match regex
+  const gdpiRe = /^([^aêeiou]*)([aêeiou]*)([hbgmn]*)([0123456789]+)$/;
+  let res = syllable.match(gdpiRe);
+  // analyze solitary "ng" as final
+  if (res[1] == "ng" && res[2] == "" && res[3] == "") {
+    res[3] = "ng";
+    res[1] = "";
+    res[2] = "";
+  }
+  return [res[1], res[2], res[3], res[4]];
+}
+
+function gdpiToPuj(syllable) {
+  res = parseGdpiSyllable(syllable);
+  res[0] = initialGdpiToPuj[res[0]];
+  res[1] = medialGdpiToPuj[res[1]];
+  res[2] = codaGdpiToPuj[res[2]];
+  return res.join("");
+}
+
 // main ----------------------------------------------------------------------
 
 // Create a readline interface to read lines from stdin
@@ -150,10 +240,10 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-// Function to apply parsePujSyllable to each line
-function applyParsePujSyllable(line) {
-  // Call parsePujSyllable function and return the result
-  return pujToGdpi(line);
+// Function to apply conversion to each word
+function convertWord(word) {
+  return gdpiToPuj(word);
+  // return pujToGdpi(word);
 }
 
 // Prompt user to enter lines
@@ -161,11 +251,11 @@ rl.question('Enter lines (press CTRL+C to exit): ', (lines) => {
   // Split the lines by newline character
   const linesArr = lines.split('\n');
   
-  // Loop through each line and apply parsePujSyllable function
+  // Loop through each line and apply convertWord function
   for (let i = 0; i < linesArr.length; i++) {
     let result = [];
     for (const word of splitText(linesArr[i])) {
-      result.push(applyParsePujSyllable(word));
+      result.push(convertWord(word));
     }
     console.log(result);
   }
