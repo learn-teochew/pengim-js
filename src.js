@@ -212,7 +212,7 @@ function parsePujSyllable(syllable) {
 
 function pujToPujn(syllable) {
   // PUJ with tone diacritics to PUJ with tone number
-  res = parsePujSyllable(syllable);
+  let res = parsePujSyllable(syllable);
   if (res[3] == -1) {
     return "[" + syllable  + "]";
   } else {
@@ -255,12 +255,12 @@ function parseGdpiSyllable(syllable) {
 function gdpiToPuj(syllable) {
   // GDPI to PUJ with tone diacritics
   // TODO add option to analyze without tones
-  res = parseGdpiSyllable(syllable);
+  let res = parseGdpiSyllable(syllable);
   // TODO Catch exception if segments not in dicts
   res[0] = initialGdpiToPuj[res[0]];
   res[1] = medialGdpiToPuj[res[1]];
   res[2] = codaGdpiToPuj[res[2]];
-  toneless = res.slice(0,3).join("");
+  let toneless = res.slice(0,3).join("");
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
   // Add diacritic on first vowel that is not i
@@ -273,15 +273,15 @@ function gdpiToPuj(syllable) {
     // Else on first n or m
     toneLetterIndex = toneless.match(/[nm]/).index;
   }
-  pre = toneless.slice(0,toneLetterIndex+1);
-  post = "";
+  let pre = toneless.slice(0,toneLetterIndex+1);
+  let post = "";
   if (toneless.length > toneLetterIndex + 1) {
     post = toneless.slice(toneLetterIndex+1,);
   }
   // Default no diacritic for tones 1 and 4
   let toneDiacritic = "";
   if (res[3] in pujNumberToCode) {
-    toneCodePoint = pujNumberToCode[res[3]];
+    let toneCodePoint = pujNumberToCode[res[3]];
     toneDiacritic = String.fromCodePoint(toneCodePoint);
   }
   let withTone = [pre, toneDiacritic, post].join("").normalize("NFC");
