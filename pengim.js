@@ -9,6 +9,71 @@ const pujCodeToNumber = {
   0x30D : 8
 };
 
+const initialPujToGdpi = {
+  ""    : ""  ,
+  "p"   : "b" ,
+  "ph"  : "p" ,
+  "b"   : "bh",
+  "m"   : "m" ,
+  "t"   : "d" ,
+  "th"  : "t" ,
+  "n"   : "n" ,
+  "l"   : "l" ,
+  "ts"  : "z" ,
+  "ch"  : "z" ,
+  "tsh" : "c" ,
+  "chh" : "c" ,
+  "s"   : "s" ,
+  "z"   : "r" ,
+  "j"   : "r" ,
+  "dz"  : "r" ,
+  "k"   : "g" ,
+  "kh"  : "k" ,
+  "g"   : "gh",
+  "ng"  : "ng",
+  "h"   : "h"
+}
+
+const medialPujToGdpi = {
+  ""    : ""   ,
+  "a"   : "a"  ,
+  "o"   : "o"  ,
+  "e"   : "ê"  ,
+  "ṳ"   : "e"  ,
+  "ai"  : "ai" ,
+  "oi"  : "oi" ,
+  "ei"  : "êi" ,
+  "au"  : "ao" ,
+  "ou"  : "ou" ,
+  "i"   : "i"  ,
+  "ia"  : "ia" ,
+  "io"  : "io" ,
+  "ie"  : "iê" ,
+  "iou" : "iou",
+  "ieu" : "iêu",
+  "iau" : "iao",
+  "iu"  : "iu" ,
+  "u"   : "u"  ,
+  "ua"  : "ua" ,
+  "ue"  : "uê" ,
+  "uai" : "uai",
+  "uei" : "uêi",
+  "ui"  : "ui"
+}
+
+const codaPujToGdpi = {
+  ""   : ""  ,
+  "h"  : "h" ,
+  "p"  : "b" ,
+  "m"  : "m" ,
+  "n"  : "ng",
+  "ng" : "ng",
+  "t"  : "g" ,
+  "k"  : "g" ,
+  "ⁿ"  : "n" ,
+  "ⁿh" : "nh"
+}
+
 function splitText(text) {
   // TODO Split on punctuation and spaces but retain them
   // remove all punctuation and replace with spaces
@@ -34,6 +99,7 @@ function segmentPujSyllable(syllable) {
 }
 
 function parsePujSyllable(syllable) {
+  // TODO Add option parse without tone markings
   let strippedWord = "";
   let toneNumber = 0;
   let wordNormalized = syllable.normalize('NFD');
@@ -67,6 +133,14 @@ function parsePujSyllable(syllable) {
   return [res[1], res[2], res[3], toneNumber];
 }
 
+function pujToGdpi(syllable) {
+  res = parsePujSyllable(syllable);
+  res[0] = initialPujToGdpi[res[0]];
+  res[1] = medialPujToGdpi[res[1]];
+  res[2] = codaPujToGdpi[res[2]];
+  return res.join("");
+}
+
 // main ----------------------------------------------------------------------
 
 // Create a readline interface to read lines from stdin
@@ -79,7 +153,7 @@ const rl = readline.createInterface({
 // Function to apply parsePujSyllable to each line
 function applyParsePujSyllable(line) {
   // Call parsePujSyllable function and return the result
-  return parsePujSyllable(line);
+  return pujToGdpi(line);
 }
 
 // Prompt user to enter lines
