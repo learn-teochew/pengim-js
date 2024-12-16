@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Teochew Romanization Converter</title>
+    <script src="./webscript.js" type="module"></script>
+  </head>
+  <body>
+    <h1>Teochew Romanization Converter</h1>
+    <p>Converts between the Guangdong Pêng'im (GDPI) and Pe̍h-ūe-jī (PUJ) romanization systems for Teochew.</p>
+    <p><strong>NB: Still in beta testing!</strong></p>
+    <p>Requirements for input:</p>
+    <ul>
+      <li>No punctuation or uppercase</li>
+      <li>All syllables separated by spaces</li>
+      <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
+    </ul>
+    <div>
+      <label for="input">Input: </label>
+      <textarea id="input" name="input" rows="5" cols="50">le2 gai5 ka1 cng1 zing1 dua7</textarea>
+    </div>
+    <div>
+      <button id="gdpi2puj_button">Pêng'im to Pe̍h-ūe-jī</button>
+      <button id="puj2gdpi_button">Pe̍h-ūe-jī to Pêng'im</button>
+    </div>
+    <div>
+      <label for="input">Output: </label>
+      <textarea id="output" rows="5" cols="50"></textarea>
+    </div>
+    <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our site to learn more about the Teochew language.</p>
+  </body>
+</html>
