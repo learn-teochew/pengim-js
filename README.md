@@ -19,6 +19,8 @@ For offline testing, fire up a server on localhost first (e.g. `python3 -m http.
 
 ## TODO
 
-* Error handling - catch invalid inputs
-* Output to HTML with potential errors highlighted in color
 * Handle punctuation and linebreaks in input
+* Handle capitalization in input
+* Object orientation
+* Regional accents
+* Fielde dictionary romanization
