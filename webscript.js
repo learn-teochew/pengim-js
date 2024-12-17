@@ -6,7 +6,8 @@ let button1 = document.getElementById("topuj_button");
 button1.addEventListener("click", function() {
   let input = document.getElementById("input").value;
   let system = document.querySelector('input[name="system"]:checked').value;
-  let convertedLine = convertLine(input, "toPuj", system);
+  // Highlight invalid input syllables in red
+  let convertedLine = convertLine(input, "toPuj", system, '<span style="color:red;">', '</span>');
   console.log(convertedLine);
   document.getElementById("outputdiv").innerHTML = convertedLine;
 });
@@ -17,6 +18,7 @@ let button2 = document.getElementById("frompuj_button");
 button2.addEventListener("click", function() {
   let input = document.getElementById("input").value;
   let system = document.querySelector('input[name="system"]:checked').value;
-  let convertedLine = convertLine(input, "fromPuj", system);
+  // Highlight invalid input syllables in red
+  let convertedLine = convertLine(input, "fromPuj", system, '<span style="color:red;">', '</span>');
   document.getElementById("outputdiv").innerHTML = convertedLine;
 });

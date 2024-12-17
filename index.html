@@ -32,6 +32,10 @@ legend {
 label {
   font-size: 20pt;
 }
+div.padbox {
+  margin: 1em;
+  padding: 1em;
+}
 .padbox-lightblue {
   margin: 1em;
   padding: 1em;
@@ -46,34 +50,33 @@ label {
   </head>
 
   <body>
-
+    <div class="padbox">
     <h1>Teochew Romanization Converter</h1>
+      <p>Converts between different romanization systems for the <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a> language. Currently supported:</p>
+      <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a></li>
+        <li><a href="https://docs.google.com/document/d/187VokH_NLN4H_fZntbEfFFMdiqZKhZBQUEhI9y7-8vo/mobilebasic">Gaginang Peng'im (GGN)</a></li>
+        <li><a href="https://github.com/kahaani/dieghv">Dieghv</a></li>
+      </ul>
 
-    <p>Converts between different romanization systems for the <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a> language. Currently supported:</p>
-    <ul>
-      <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a></li>
-      <li><a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a></li>
-      <li><a href="https://docs.google.com/document/d/187VokH_NLN4H_fZntbEfFFMdiqZKhZBQUEhI9y7-8vo/mobilebasic">Gaginang Peng'im (GGN)</a></li>
-      <li><a href="https://github.com/kahaani/dieghv">Dieghv</a></li>
-    </ul>
+      <p><strong>NB: Still in beta testing!</strong> <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a> for this Javascript project. For another implementation in Python, try our <a href="https://github.com/learn-teochew/parsetc">parsetc</a> library.</p>
 
-    <p><strong>NB: Still in beta testing!</strong> <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a> for this Javascript project. For another implementation in Python, try our <a href="https://github.com/learn-teochew/parsetc">parsetc</a> library.</p>
+      <p>Requirements for input:</p>
 
-    <p>Requirements for input:</p>
-
-    <ul>
-      <li>No uppercase</li>
-      <li>All syllables separated by spaces</li>
-      <li>Punctuation will be ignored</li>
-      <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
-    </ul>
-
-    <div class="padbox-lightblue">
+      <ul>
+        <li>Lowercase input only</li>
+        <li>All syllables separated by spaces</li>
+        <li>Punctuation will be removed</li>
+        <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
+      </ul>
+    </div>
+    <div class="padbox" style="background:lightblue;">
       <h2>Input</h2>
-      <textarea id="input" name="input" rows="4">le2 gai5 ka1 cng1 zing1 dua7</textarea>
+      <textarea id="input" name="input" rows="4">le2 gai5 ka1 chng1 zing1 dua7</textarea>
     </div>
 
-    <div class="padbox-lightblue">
+    <div class="padbox" style="background:lightblue;">
       <fieldset><legend>Scheme to convert to/from</legend>
         <div>
           <input type="radio" id="gdpi" name="system" value="gdpi" checked/>
@@ -90,15 +93,15 @@ label {
       </fieldset>
     </div>
 
-    <div class="padbox-lightblue">
+    <div class="padbox" style="background:lightblue;">
       <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
       <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
     </div>
 
-    <div class="padbox-lightpink">
+    <div class="padbox" style="background:lightpink;">
       <h2>Output</h2>
-      <!-- <textarea id="output" name="output" rows="4"></textarea> -->
       <div style="font-size:18pt; background:white; padding:0.5em;" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
+      <p>Invalid input syllables will be marked in red and not be converted.</p>
     </div>
 
     <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>

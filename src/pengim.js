@@ -170,7 +170,7 @@ function gdpiLikeToPuj(syllable, data) {
 }
 
 // Apply conversion to each word
-function convertWord(word, direction="fromPuj", system="gdpi") {
+function convertWord(word, direction="fromPuj", system="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
   if (direction == "toPuj") {
     try {
       if (system == "gdpi") {
@@ -182,7 +182,7 @@ function convertWord(word, direction="fromPuj", system="gdpi") {
       }
     } catch(e) {
       console.error(e.name + ": " + e.message);
-      return "[" + word + "]";
+      return invalidLeftDelim + word + invalidRightDelim;
     }
   } else if (direction == "fromPuj") {
     try {
@@ -195,16 +195,16 @@ function convertWord(word, direction="fromPuj", system="gdpi") {
       }
     } catch(e) {
       console.error(e.name + ": " + e.message);
-      return "[" + word + "]";
+      return invalidLeftDelim + word + invalidRightDelim;
     }
   }
 }
 
 // Apply conversion to entire line
-function convertLine(line, direction="fromPuj", system="gdpi") {
+function convertLine(line, direction="fromPuj", system="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
   let result = [];
   for (const word of splitText(line)) {
-    result.push(convertWord(word, direction, system));
+    result.push(convertWord(word, direction, system, invalidLeftDelim, invalidRightDelim));
   }
   return result.join(" ");
 }
