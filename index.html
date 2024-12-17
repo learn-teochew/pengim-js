@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <title>Teochew Romanization Converter</title>
     <script src="./webscript.js" type="module"></script>
+    <script>
+    function copyToClipboard() {
+      var copyText = document.getElementById("output");
+      copyText.select();
+      document.execCommand("copy");
+      alert("Copied to clipboard!");
+    }
+    </script>
 <style>
 body {
   font-size: 14pt;
@@ -35,7 +43,6 @@ button {
   padding: 1em;
   background: lightpink;
 }
-
 </style>
   </head>
   <body>
@@ -55,6 +62,8 @@ button {
     <div class="padbox-lightblue">
       <button id="gdpi2puj_button">Pêng'im to Pe̍h-ūe-jī</button>
       <button id="puj2gdpi_button">Pe̍h-ūe-jī to Pêng'im</button>
+      <button onclick="copyToClipboard()">Copy output to Clipboard</button>
+
     </div>
     <div class="padbox-lightpink">
       <h2>Output</h2>
