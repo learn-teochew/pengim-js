@@ -4,15 +4,6 @@
     <meta charset="utf-8">
     <title>Teochew Romanization Converter</title>
     <script src="./webscript.js" type="module"></script>
-    <script>
-    function copyToClipboard() {
-      var copyText = document.getElementById("output");
-      copyText.select();
-      document.execCommand("copy");
-      alert("Copied to clipboard!");
-    }
-    </script>
-
 <style>
 body {
   font-size: 14pt;
@@ -27,6 +18,7 @@ textarea {
   font-size: 18pt;
   width: 90%;
   margin: auto;
+  padding: 0.5em; 
   font-family: serif;
   color: darkgreen;
 }
@@ -101,12 +93,12 @@ label {
     <div class="padbox-lightblue">
       <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
       <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
-      <button onclick="copyToClipboard()">Copy output to Clipboard</button>
     </div>
 
     <div class="padbox-lightpink">
       <h2>Output</h2>
-      <textarea id="output" name="output" rows="4"></textarea>
+      <!-- <textarea id="output" name="output" rows="4"></textarea> -->
+      <div style="font-size:18pt; background:white; padding:0.5em;" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
     </div>
 
     <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
