@@ -4,6 +4,39 @@
     <meta charset="utf-8">
     <title>Teochew Romanization Converter</title>
     <script src="./webscript.js" type="module"></script>
+<style>
+body {
+  font-size: 14pt;
+}
+p {
+  font-family: serif;
+}
+h1, h2 {
+  font-family: sans-serif;
+}
+textarea {
+  font-size: 18pt;
+  width: 90%;
+  margin: auto;
+  font-family: serif;
+  color: darkgreen;
+}
+button {
+  font-size: 18pt;
+  margin: auto;
+}
+.padbox-lightblue {
+  margin: 1em;
+  padding: 1em;
+  background: lightblue;
+}
+.padbox-lightpink {
+  margin: 1em;
+  padding: 1em;
+  background: lightpink;
+}
+
+</style>
   </head>
   <body>
     <h1>Teochew Romanization Converter</h1>
@@ -15,18 +48,18 @@
       <li>All syllables separated by spaces</li>
       <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
     </ul>
-    <div>
-      <label for="input">Input: </label>
-      <textarea id="input" name="input" rows="5" cols="50">le2 gai5 ka1 cng1 zing1 dua7</textarea>
+    <div class="padbox-lightblue">
+      <h2>Input</h2>
+      <textarea id="input" name="input" rows="4">le2 gai5 ka1 cng1 zing1 dua7</textarea>
     </div>
-    <div>
+    <div class="padbox-lightblue">
       <button id="gdpi2puj_button">Pêng'im to Pe̍h-ūe-jī</button>
       <button id="puj2gdpi_button">Pe̍h-ūe-jī to Pêng'im</button>
     </div>
-    <div>
-      <label for="input">Output: </label>
-      <textarea id="output" rows="5" cols="50"></textarea>
+    <div class="padbox-lightpink">
+      <h2>Output</h2>
+      <textarea id="output" name="output" rows="4"></textarea>
     </div>
-    <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our site to learn more about the Teochew language.</p>
+    <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
   </body>
 </html>
