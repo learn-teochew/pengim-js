@@ -9,7 +9,7 @@ let button1 = document.getElementById("gdpi2puj_button");
 
 button1.addEventListener("click", function() {
   let input = textarea1.value;
-  let convertedLine = convertLine(input, "gdpi2puj");
+  let convertedLine = convertLine(input, "toPuj", "gdpi");
   textarea2.value = convertedLine;
 });
 
@@ -18,6 +18,6 @@ let button2 = document.getElementById("puj2gdpi_button");
 
 button2.addEventListener("click", function() {
   let input = textarea1.value;
-  let convertedLine = convertLine(input, "puj2gdpi");
+  let convertedLine = convertLine(input, "fromPuj", "gdpi");
   textarea2.value = convertedLine;
 });

@@ -1,3 +1,5 @@
+export const syllableRe = /^([^aêeiou\d]*)([aêeiou]*)([hbgmn]*)([012345678]*)$/;
+
 export const initialFromPuj = {
   ""    : ""  ,
   "p"   : "b" ,

@@ -32,9 +32,9 @@ rl.question('Enter input (press CTRL+C to exit): ', (lines) => {
   for (let i = 0; i < linesArr.length; i++) {
     let out = "";
     if (options.gdpi2puj) {
-      out = convertLine(linesArr[i], "gdpi2puj");
+      out = convertLine(linesArr[i], "toPuj", "gdpi");
     } else if (options.puj2gdpi) {
-      out = convertLine(linesArr[i], "puj2gdpi");
+      out = convertLine(linesArr[i], "fromPuj", "gdpi");
     }
     console.log(out);
   }

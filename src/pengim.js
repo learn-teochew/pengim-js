@@ -2,7 +2,7 @@
 
 import * as gdpi from "./data-gdpi.js";
 import * as tones from "./data-tones.js";
-//
+
 // Functions ------------------------------------------------------------------
 
 function splitText(text) {
@@ -79,24 +79,23 @@ function pujToPujn(syllable) {
   }
 }
 
-function pujToGdpi(syllable) {
-  // PUJ with tone diacritics to GDPI
+function pujToGdpiLike(syllable, data) {
+  // PUJ with tone diacritics to GDPI-like
   let res = parsePujSyllable(syllable);
   if (res[3] == -1) {
     return "[" + syllable  + "]";
   } else {
     // TODO Catch exception if segments not in dicts
-    res[0] = gdpi.initialFromPuj[res[0]];
-    res[1] = gdpi.medialFromPuj[res[1]];
-    res[2] = gdpi.codaFromPuj[res[2]];
+    res[0] = data.initialFromPuj[res[0]];
+    res[1] = data.medialFromPuj[res[1]];
+    res[2] = data.codaFromPuj[res[2]];
     return res.join("");
   }
 }
 
-function parseGdpiSyllable(syllable) {
+function parseGdpiLikeSyllable(syllable, data) {
   // TODO handle error if syllable does not match regex
-  const gdpiRe = /^([^aêeiou\d]*)([aêeiou]*)([hbgmn]*)([012345678]*)$/;
-  let res = syllable.match(gdpiRe);
+  let res = syllable.match(data.syllableRe);
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
     res[3] = "ng";
@@ -111,14 +110,14 @@ function parseGdpiSyllable(syllable) {
   return [res[1], res[2], res[3], res[4]];
 }
 
-function gdpiToPuj(syllable) {
-  // GDPI to PUJ with tone diacritics
+function gdpiLikeToPuj(syllable, data) {
+  // GDPI-like to PUJ with tone diacritics
   // TODO add option to analyze without tones
-  let res = parseGdpiSyllable(syllable);
+  let res = parseGdpiLikeSyllable(syllable, data);
   // TODO Catch exception if segments not in dicts
-  res[0] = gdpi.initialToPuj[res[0]];
-  res[1] = gdpi.medialToPuj[res[1]];
-  res[2] = gdpi.codaToPuj[res[2]];
+  res[0] = data.initialToPuj[res[0]];
+  res[1] = data.medialToPuj[res[1]];
+  res[2] = data.codaToPuj[res[2]];
   let toneless = res.slice(0,3).join("");
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
@@ -148,19 +147,19 @@ function gdpiToPuj(syllable) {
 }
 
 // Apply conversion to each word
-function convertWord(word, version) {
-  if (version == "gdpi2puj") {
-    return gdpiToPuj(word);
-  } else if (version == "puj2gdpi") {
-    return pujToGdpi(word);
+function convertWord(word, direction="fromPuj", system="gdpi") {
+  if (direction == "toPuj") {
+    return gdpiLikeToPuj(word, gdpi);
+  } else if (direction == "fromPuj") {
+    return pujToGdpiLike(word, gdpi);
   }
 }
 
 // Apply conversion to entire line
-function convertLine(line, version) {
+function convertLine(line, direction="fromPuj", system="gdpi") {
   let result = [];
   for (const word of splitText(line)) {
-    result.push(convertWord(word, version));
+    result.push(convertWord(word, direction, system));
   }
   return result.join(" ");
 }
