@@ -52,8 +52,7 @@ function parsePujSyllable(syllable) {
         // combining diaeresis below
         strippedWord += wordNormalized[i];
       } else {
-        console.error("Diacritic not used in PUJ: " + charCode);
-        toneNumber = -1;
+        throw new Error("Diacritic not used in PUJ: " + charCode);
       }
     } else {
       // add non-diacritic character to stripped syllable
@@ -74,7 +73,7 @@ function parsePujSyllable(syllable) {
 function pujToPujn(syllable) {
   // PUJ with tone diacritics to PUJ with tone number
   let res = parsePujSyllable(syllable);
-  if (res[3] == -1) {
+  if (res[3] == -1) { // TODO change this to try catch
     return "[" + syllable  + "]";
   } else {
     return res.join("");
@@ -88,9 +87,21 @@ function pujToGdpiLike(syllable, data) {
     return "[" + syllable  + "]";
   } else {
     // TODO Catch exception if segments not in dicts
-    res[0] = data.initialFromPuj[res[0]];
-    res[1] = data.medialFromPuj[res[1]];
-    res[2] = data.codaFromPuj[res[2]];
+    if ( res[0] in data.initialFromPuj ) {
+      res[0] = data.initialFromPuj[res[0]];
+    } else {
+      throw new Error("Initial not recognized: " + res[0]);
+    }
+    if ( res[1] in data.medialFromPuj ) {
+      res[1] = data.medialFromPuj[res[1]];
+    } else {
+      throw new Error("Medial not recognized: " + res[1]);
+    }
+    if ( res[2] in data.codaFromPuj ) {
+      res[2] = data.codaFromPuj[res[2]];
+    } else {
+      throw new Error("Final not recognized: " + res[2]);
+    }
     return res.join("");
   }
 }
@@ -159,12 +170,17 @@ function convertWord(word, direction="fromPuj", system="gdpi") {
       return gdpiLikeToPuj(word, dieghv);
     }
   } else if (direction == "fromPuj") {
-    if (system == "gdpi") {
-      return pujToGdpiLike(word, gdpi);
-    } else if (system == "ggn") {
-      return pujToGdpiLike(word, ggn);
-    } else if (system == "dieghv") {
-      return pujToGdpiLike(word, dieghv);
+    try {
+      if (system == "gdpi") {
+        return pujToGdpiLike(word, gdpi);
+      } else if (system == "ggn") {
+        return pujToGdpiLike(word, ggn);
+      } else if (system == "dieghv") {
+        return pujToGdpiLike(word, dieghv);
+      }
+    } catch(e) {
+      console.error(e.name + ": " + e.message);
+      return "[" + word + "]";
     }
   }
 }
