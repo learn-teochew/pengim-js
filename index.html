@@ -4,49 +4,7 @@
     <meta charset="utf-8">
     <title>Teochew Romanization Converter</title>
     <script src="./webscript.js" type="module"></script>
-<style>
-body {
-  font-size: 14pt;
-}
-p {
-  font-family: serif;
-}
-h1, h2 {
-  font-family: sans-serif;
-}
-textarea {
-  font-size: 18pt;
-  width: 90%;
-  margin: auto;
-  padding: 0.5em; 
-  font-family: serif;
-  color: darkgreen;
-}
-button {
-  font-size: 18pt;
-  margin: auto;
-}
-legend {
-  font-size: 20pt;
-}
-label {
-  font-size: 20pt;
-}
-div.padbox {
-  margin: 1em;
-  padding: 1em;
-}
-.padbox-lightblue {
-  margin: 1em;
-  padding: 1em;
-  background: lightblue;
-}
-.padbox-lightpink {
-  margin: 1em;
-  padding: 1em;
-  background: lightpink;
-}
-</style>
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <body>
@@ -71,40 +29,42 @@ div.padbox {
         <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
       </ul>
     </div>
-    <div class="padbox" style="background:lightblue;">
+    <div class="lightblue">
       <h2>Input</h2>
       <textarea id="input" name="input" rows="4">le2 gai5 ka1 chng1 zing1 dua7</textarea>
     </div>
 
-    <div class="padbox" style="background:lightblue;">
+    <div class="lightblue">
       <fieldset><legend>Scheme to convert to/from</legend>
-        <div>
+        <div class="radio">
           <input type="radio" id="gdpi" name="system" value="gdpi" checked/>
           <label for="gdpi">Guangdong Pêng'im</label>
         </div>
-        <div>
+        <div class="radio">
           <input type="radio" id="ggn" name="system" value="ggn" />
           <label for="ggn">Gaginang Peng'im</label>
         </div>
-        <div>
+        <div class="radio">
           <input type="radio" id="dieghv" name="system" value="dieghv" />
           <label for="dieghv">Dieghv</label>
         </div>
       </fieldset>
     </div>
 
-    <div class="padbox" style="background:lightblue;">
+    <div class="lightblue">
       <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
       <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
     </div>
 
-    <div class="padbox" style="background:lightpink;">
+    <div class="lightpink">
       <h2>Output</h2>
-      <div style="font-size:18pt; background:white; padding:0.5em;" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
+      <div style="" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
       <p>Invalid input syllables will be marked in red and not be converted.</p>
     </div>
 
-    <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
+    <div>
+      <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
+    </div>
 
   </body>
 
