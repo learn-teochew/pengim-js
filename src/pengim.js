@@ -125,12 +125,22 @@ function parseGdpiLikeSyllable(syllable, data) {
 
 function gdpiLikeToPuj(syllable, data) {
   // GDPI-like to PUJ with tone diacritics
-  // TODO add option to analyze without tones
   let res = parseGdpiLikeSyllable(syllable, data);
-  // TODO Catch exception if segments not in dicts
-  res[0] = data.initialToPuj[res[0]];
-  res[1] = data.medialToPuj[res[1]];
-  res[2] = data.codaToPuj[res[2]];
+  if ( res[0] in data.initialToPuj ) {
+    res[0] = data.initialToPuj[res[0]];
+  } else {
+    throw new Error("Initial not recognized: " + res[0]);
+  }
+  if ( res[1] in data.medialToPuj ) {
+    res[1] = data.medialToPuj[res[1]];
+  } else {
+    throw new Error("Medial not recognized: " + res[1]);
+  }
+  if ( res[2] in data.codaToPuj ) {
+    res[2] = data.codaToPuj[res[2]];
+  } else {
+    throw new Error("Coda not recognized: " + res[2]);
+  }
   let toneless = res.slice(0,3).join("");
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
@@ -162,12 +172,17 @@ function gdpiLikeToPuj(syllable, data) {
 // Apply conversion to each word
 function convertWord(word, direction="fromPuj", system="gdpi") {
   if (direction == "toPuj") {
-    if (system == "gdpi") {
-      return gdpiLikeToPuj(word, gdpi);
-    } else if (system == "ggn") {
-      return gdpiLikeToPuj(word, ggn);
-    } else if (system == "dieghv") {
-      return gdpiLikeToPuj(word, dieghv);
+    try {
+      if (system == "gdpi") {
+        return gdpiLikeToPuj(word, gdpi);
+      } else if (system == "ggn") {
+        return gdpiLikeToPuj(word, ggn);
+      } else if (system == "dieghv") {
+        return gdpiLikeToPuj(word, dieghv);
+      }
+    } catch(e) {
+      console.error(e.name + ": " + e.message);
+      return "[" + word + "]";
     }
   } else if (direction == "fromPuj") {
     try {
