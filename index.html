@@ -12,6 +12,7 @@
       alert("Copied to clipboard!");
     }
     </script>
+
 <style>
 body {
   font-size: 14pt;
@@ -33,6 +34,12 @@ button {
   font-size: 18pt;
   margin: auto;
 }
+legend {
+  font-size: 20pt;
+}
+label {
+  font-size: 20pt;
+}
 .padbox-lightblue {
   margin: 1em;
   padding: 1em;
@@ -45,21 +52,35 @@ button {
 }
 </style>
   </head>
+
   <body>
+
     <h1>Teochew Romanization Converter</h1>
-    <p>Converts between the <a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a> and <a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a> romanization systems for <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a>. <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a>.</p>
-    <p><strong>NB: Still in beta testing!</strong></p>
+
+    <p>Converts between different romanization systems for the <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a> language. Currently supported:</p>
+    <ul>
+      <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a></li>
+      <li><a href="https://docs.google.com/document/d/187VokH_NLN4H_fZntbEfFFMdiqZKhZBQUEhI9y7-8vo/mobilebasic">Gaginang Peng'im (GGN)</a></li>
+      <li><a href="https://github.com/kahaani/dieghv">Dieghv</a></li>
+    </ul>
+
+    <p><strong>NB: Still in beta testing!</strong> <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a> for this Javascript project. For another implementation in Python, try our <a href="https://github.com/learn-teochew/parsetc">parsetc</a> library.</p>
+
     <p>Requirements for input:</p>
+
     <ul>
       <li>No uppercase</li>
       <li>All syllables separated by spaces</li>
       <li>Punctuation will be ignored</li>
       <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
     </ul>
+
     <div class="padbox-lightblue">
       <h2>Input</h2>
       <textarea id="input" name="input" rows="4">le2 gai5 ka1 cng1 zing1 dua7</textarea>
     </div>
+
     <div class="padbox-lightblue">
       <fieldset><legend>Scheme to convert to/from</legend>
         <div>
@@ -70,18 +91,26 @@ button {
           <input type="radio" id="ggn" name="system" value="ggn" />
           <label for="ggn">Gaginang Peng'im</label>
         </div>
+        <div>
+          <input type="radio" id="dieghv" name="system" value="dieghv" />
+          <label for="dieghv">Dieghv</label>
+        </div>
       </fieldset>
     </div>
+
     <div class="padbox-lightblue">
       <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
       <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
       <button onclick="copyToClipboard()">Copy output to Clipboard</button>
-
     </div>
+
     <div class="padbox-lightpink">
       <h2>Output</h2>
       <textarea id="output" name="output" rows="4"></textarea>
     </div>
+
     <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
+
   </body>
+
 </html>

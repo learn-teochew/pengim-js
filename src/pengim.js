@@ -2,6 +2,7 @@
 
 import * as gdpi from "./data-gdpi.js";
 import * as ggn from "./data-ggn.js";
+import * as dieghv from "./data-dieghv.js";
 import * as tones from "./data-tones.js";
 
 // Functions ------------------------------------------------------------------
@@ -154,12 +155,16 @@ function convertWord(word, direction="fromPuj", system="gdpi") {
       return gdpiLikeToPuj(word, gdpi);
     } else if (system == "ggn") {
       return gdpiLikeToPuj(word, ggn);
+    } else if (system == "dieghv") {
+      return gdpiLikeToPuj(word, dieghv);
     }
   } else if (direction == "fromPuj") {
     if (system == "gdpi") {
       return pujToGdpiLike(word, gdpi);
     } else if (system == "ggn") {
       return pujToGdpiLike(word, ggn);
+    } else if (system == "dieghv") {
+      return pujToGdpiLike(word, dieghv);
     }
   }
 }
