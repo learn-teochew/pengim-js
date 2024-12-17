@@ -95,7 +95,7 @@ function pujToGdpiLike(syllable, data) {
 
 function parseGdpiLikeSyllable(syllable, data) {
   // TODO handle error if syllable does not match regex
-  let res = syllable.match(data.syllableRe);
+  let res = syllable.normalize('NFC').match(data.syllableRe);
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
     res[3] = "ng";
