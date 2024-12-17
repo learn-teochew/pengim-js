@@ -5,7 +5,7 @@ export const pujCodeToNumber = {
   0x303 : 6,
   0x304 : 7,
   0x305 : 7,
-  0x30D : 8
+  0x30D : 8,
   0x307 : 8
 };
 
