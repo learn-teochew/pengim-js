@@ -51,8 +51,9 @@ button {
     <p><strong>NB: Still in beta testing!</strong></p>
     <p>Requirements for input:</p>
     <ul>
-      <li>No punctuation or uppercase</li>
+      <li>No uppercase</li>
       <li>All syllables separated by spaces</li>
+      <li>Punctuation will be ignored</li>
       <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
     </ul>
     <div class="padbox-lightblue">
@@ -60,8 +61,20 @@ button {
       <textarea id="input" name="input" rows="4">le2 gai5 ka1 cng1 zing1 dua7</textarea>
     </div>
     <div class="padbox-lightblue">
-      <button id="gdpi2puj_button">Pêng'im to Pe̍h-ūe-jī</button>
-      <button id="puj2gdpi_button">Pe̍h-ūe-jī to Pêng'im</button>
+      <fieldset><legend>Scheme to convert to/from</legend>
+        <div>
+          <input type="radio" id="gdpi" name="system" value="gdpi" checked/>
+          <label for="gdpi">Guangdong Pêng'im</label>
+        </div>
+        <div>
+          <input type="radio" id="ggn" name="system" value="ggn" />
+          <label for="ggn">Gaginang Peng'im</label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="padbox-lightblue">
+      <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
+      <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
       <button onclick="copyToClipboard()">Copy output to Clipboard</button>
 
     </div>
