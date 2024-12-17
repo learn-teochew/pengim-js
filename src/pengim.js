@@ -1,6 +1,7 @@
 // Data -----------------------------------------------------------------------
 
 import * as gdpi from "./data-gdpi.js";
+import * as ggn from "./data-ggn.js";
 import * as tones from "./data-tones.js";
 
 // Functions ------------------------------------------------------------------
@@ -149,9 +150,17 @@ function gdpiLikeToPuj(syllable, data) {
 // Apply conversion to each word
 function convertWord(word, direction="fromPuj", system="gdpi") {
   if (direction == "toPuj") {
-    return gdpiLikeToPuj(word, gdpi);
+    if (system == "gdpi") {
+      return gdpiLikeToPuj(word, gdpi);
+    } else if (system == "ggn") {
+      return gdpiLikeToPuj(word, ggn);
+    }
   } else if (direction == "fromPuj") {
-    return pujToGdpiLike(word, gdpi);
+    if (system == "gdpi") {
+      return pujToGdpiLike(word, gdpi);
+    } else if (system == "ggn") {
+      return pujToGdpiLike(word, ggn);
+    }
   }
 }
 
