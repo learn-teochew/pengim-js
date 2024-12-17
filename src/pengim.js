@@ -1,149 +1,8 @@
 // Data -----------------------------------------------------------------------
 
-const pujCodeToNumber = {
-  0x301 : 2,
-  0x300 : 3,
-  0x302 : 5,
-  0x306 : 6,
-  0x30C : 6,
-  0x304 : 7,
-  0x305 : 7,
-  0x30D : 8
-};
-
-const pujNumberToCode = {
-  2 : 0x301 ,
-  3 : 0x300 ,
-  5 : 0x302 ,
-  6 : 0x306 ,
-  7 : 0x304 ,
-  8 : 0x30D 
-};
-
-const initialPujToGdpi = {
-  ""    : ""  ,
-  "p"   : "b" ,
-  "ph"  : "p" ,
-  "b"   : "bh",
-  "m"   : "m" ,
-  "t"   : "d" ,
-  "th"  : "t" ,
-  "n"   : "n" ,
-  "l"   : "l" ,
-  "ts"  : "z" ,
-  "ch"  : "z" ,
-  "tsh" : "c" ,
-  "chh" : "c" ,
-  "s"   : "s" ,
-  "z"   : "r" ,
-  "j"   : "r" ,
-  "dz"  : "r" ,
-  "k"   : "g" ,
-  "kh"  : "k" ,
-  "g"   : "gh",
-  "ng"  : "ng",
-  "h"   : "h"
-}
-
-const medialPujToGdpi = {
-  ""    : ""   ,
-  "a"   : "a"  ,
-  "o"   : "o"  ,
-  "e"   : "ê"  ,
-  "ṳ"   : "e"  ,
-  "ai"  : "ai" ,
-  "oi"  : "oi" ,
-  "ei"  : "êi" ,
-  "au"  : "ao" ,
-  "ou"  : "ou" ,
-  "i"   : "i"  ,
-  "ia"  : "ia" ,
-  "io"  : "io" ,
-  "ie"  : "iê" ,
-  "iou" : "iou",
-  "ieu" : "iêu",
-  "iau" : "iao",
-  "iu"  : "iu" ,
-  "u"   : "u"  ,
-  "ua"  : "ua" ,
-  "ue"  : "uê" ,
-  "uai" : "uai",
-  "uei" : "uêi",
-  "ui"  : "ui"
-}
-
-const codaPujToGdpi = {
-  ""   : ""  ,
-  "h"  : "h" ,
-  "p"  : "b" ,
-  "m"  : "m" ,
-  "n"  : "ng",
-  "ng" : "ng",
-  "t"  : "g" ,
-  "k"  : "g" ,
-  "ⁿ"  : "n" ,
-  "ⁿh" : "nh"
-}
-
-const initialGdpiToPuj = {
-  ""  : ""    ,
-  "b" : "p"   ,
-  "p" : "ph"  ,
-  "bh": "b"   ,
-  "m" : "m"   ,
-  "d" : "t"   ,
-  "t" : "th"  ,
-  "n" : "n"   ,
-  "l" : "l"   ,
-  "z" : "ts"  ,
-  "c" : "tsh" ,
-  "s" : "s"   ,
-  "r" : "j"   ,
-  "g" : "k"   ,
-  "k" : "kh"  ,
-  "gh": "g"   ,
-  "ng": "ng"  ,
-  "h" : "h"   
-}
-
-const medialGdpiToPuj = {
-  ""   : ""    ,
-  "a"  : "a"   ,
-  "o"  : "o"   ,
-  "ê"  : "e"   ,
-  "e"  : "ṳ"   ,
-  "ai" : "ai"  ,
-  "oi" : "oi"  ,
-  "êi" : "ei"  ,
-  "ao" : "au"  ,
-  "ou" : "ou"  ,
-  "i"  : "i"   ,
-  "ia" : "ia"  ,
-  "io" : "io"  ,
-  "iê" : "ie"  ,
-  "iou": "iou" ,
-  "iêu": "ieu" ,
-  "iao": "iau" ,
-  "iu" : "iu"  ,
-  "u"  : "u"   ,
-  "ua" : "ua"  ,
-  "uê" : "ue"  ,
-  "uai": "uai" ,
-  "uêi": "uei" ,
-  "ui" : "ui"  
-}
-
-const codaGdpiToPuj = {
-  ""  : ""   ,
-  "h" : "h"  ,
-  "b" : "p"  ,
-  "m" : "m"  ,
-  "ng": "ng" ,
-  "g" : "k"  ,
-  "n" : "ⁿ"  ,
-  "nh": "ⁿh" 
-}
-
+import * as gdpi from "./data-gdpi.js";
+import * as tones from "./data-tones.js";
+//
 // Functions ------------------------------------------------------------------
 
 function splitText(text) {
@@ -185,8 +44,8 @@ function parsePujSyllable(syllable) {
     let charCode = char.charCodeAt(0);
     // Combining Diacritical Marks block 0300-036F
     if (charCode >= Number("0x300") && charCode <= Number("0x36F")) {
-      if (charCode in pujCodeToNumber) {
-        toneNumber = pujCodeToNumber[charCode];
+      if (charCode in tones.pujCodeToNumber) {
+        toneNumber = tones.pujCodeToNumber[charCode];
       } else if (charCode == Number("0x324")) {
         // combining diaeresis below
         strippedWord += wordNormalized[i];
@@ -227,9 +86,9 @@ function pujToGdpi(syllable) {
     return "[" + syllable  + "]";
   } else {
     // TODO Catch exception if segments not in dicts
-    res[0] = initialPujToGdpi[res[0]];
-    res[1] = medialPujToGdpi[res[1]];
-    res[2] = codaPujToGdpi[res[2]];
+    res[0] = gdpi.initialPujToGdpi[res[0]];
+    res[1] = gdpi.medialPujToGdpi[res[1]];
+    res[2] = gdpi.codaPujToGdpi[res[2]];
     return res.join("");
   }
 }
@@ -257,9 +116,9 @@ function gdpiToPuj(syllable) {
   // TODO add option to analyze without tones
   let res = parseGdpiSyllable(syllable);
   // TODO Catch exception if segments not in dicts
-  res[0] = initialGdpiToPuj[res[0]];
-  res[1] = medialGdpiToPuj[res[1]];
-  res[2] = codaGdpiToPuj[res[2]];
+  res[0] = gdpi.initialGdpiToPuj[res[0]];
+  res[1] = gdpi.medialGdpiToPuj[res[1]];
+  res[2] = gdpi.codaGdpiToPuj[res[2]];
   let toneless = res.slice(0,3).join("");
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
@@ -280,8 +139,8 @@ function gdpiToPuj(syllable) {
   }
   // Default no diacritic for tones 1 and 4
   let toneDiacritic = "";
-  if (res[3] in pujNumberToCode) {
-    let toneCodePoint = pujNumberToCode[res[3]];
+  if (res[3] in tones.pujNumberToCode) {
+    let toneCodePoint = tones.pujNumberToCode[res[3]];
     toneDiacritic = String.fromCodePoint(toneCodePoint);
   }
   let withTone = [pre, toneDiacritic, post].join("").normalize("NFC");
