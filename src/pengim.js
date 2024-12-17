@@ -86,9 +86,9 @@ function pujToGdpi(syllable) {
     return "[" + syllable  + "]";
   } else {
     // TODO Catch exception if segments not in dicts
-    res[0] = gdpi.initialPujToGdpi[res[0]];
-    res[1] = gdpi.medialPujToGdpi[res[1]];
-    res[2] = gdpi.codaPujToGdpi[res[2]];
+    res[0] = gdpi.initialFromPuj[res[0]];
+    res[1] = gdpi.medialFromPuj[res[1]];
+    res[2] = gdpi.codaFromPuj[res[2]];
     return res.join("");
   }
 }
@@ -103,7 +103,7 @@ function parseGdpiSyllable(syllable) {
     res[1] = "";
     res[2] = "";
   }
-  // ng finals with no vowel
+  // ng finals with no vowel, e.g. cng1
   if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
     res[1] = res[1].slice(0,-2);
     res[3] = "ng";
@@ -116,9 +116,9 @@ function gdpiToPuj(syllable) {
   // TODO add option to analyze without tones
   let res = parseGdpiSyllable(syllable);
   // TODO Catch exception if segments not in dicts
-  res[0] = gdpi.initialGdpiToPuj[res[0]];
-  res[1] = gdpi.medialGdpiToPuj[res[1]];
-  res[2] = gdpi.codaGdpiToPuj[res[2]];
+  res[0] = gdpi.initialToPuj[res[0]];
+  res[1] = gdpi.medialToPuj[res[1]];
+  res[2] = gdpi.codaToPuj[res[2]];
   let toneless = res.slice(0,3).join("");
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;

@@ -1,4 +1,4 @@
-export const initialPujToGdpi = {
+export const initialFromPuj = {
   ""    : ""  ,
   "p"   : "b" ,
   "ph"  : "p" ,
@@ -23,7 +23,7 @@ export const initialPujToGdpi = {
   "h"   : "h"
 }
 
-export const medialPujToGdpi = {
+export const medialFromPuj = {
   ""    : ""   ,
   "a"   : "a"  ,
   "o"   : "o"  ,
@@ -50,7 +50,7 @@ export const medialPujToGdpi = {
   "ui"  : "ui"
 }
 
-export const codaPujToGdpi = {
+export const codaFromPuj = {
   ""   : ""  ,
   "h"  : "h" ,
   "p"  : "b" ,
@@ -63,7 +63,7 @@ export const codaPujToGdpi = {
   "ⁿh" : "nh"
 }
 
-export const initialGdpiToPuj = {
+export const initialToPuj = {
   ""  : ""    ,
   "b" : "p"   ,
   "p" : "ph"  ,
@@ -84,7 +84,7 @@ export const initialGdpiToPuj = {
   "h" : "h"   
 }
 
-export const medialGdpiToPuj = {
+export const medialToPuj = {
   ""   : ""    ,
   "a"  : "a"   ,
   "o"  : "o"   ,
@@ -111,7 +111,7 @@ export const medialGdpiToPuj = {
   "ui" : "ui"  
 }
 
-export const codaGdpiToPuj = {
+export const codaToPuj = {
   ""  : ""   ,
   "h" : "h"  ,
   "b" : "p"  ,
