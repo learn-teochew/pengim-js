@@ -1,6 +1,6 @@
 import commander from 'commander';
 import readline from 'readline';
-import { convertLine } from './src.js';
+import { convertLine } from './src/pengim.js';
 
 commander
   .version('1.0.0', '-v, --version')

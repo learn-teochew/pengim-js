@@ -1,4 +1,4 @@
-import { convertLine } from "./src.js";
+import { convertLine } from "./src/pengim.js";
 
 // Get the textarea elements
 let textarea1 = document.getElementById("input");

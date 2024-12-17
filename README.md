@@ -8,7 +8,7 @@ Conversion between Teochew romanization systems.
 Requires Node.js and the `commander` library.
 
 ```bash
-node pengim.js -h
+node pengim-app.js -h
 ```
 
 ## Webpage
