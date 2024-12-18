@@ -5,13 +5,12 @@ import { convertLine } from './src/pengim.js';
 commander
   .version('1.0.0', '-v, --version')
   .usage('[OPTIONS]...')
-  .option('-f, --fromPuj', 'Convert from Pe̍h-ūe-jī input')
-  .option('-t, --toPuj', 'Convert into Pe̍h-ūe-jī output')
-  .option('-s, --system <name>', 'Scheme to convert to/from: gdpi, ggn, dieghv', 'gdpi')
+  .option('-f, --from <name>', 'Scheme to convert from: puj, gdpi, ggn, dieghv', 'puj')
+  .option('-t, --to <name>', 'Scheme to convert to: puj, gdpi, ggn, dieghv', 'gdpi')
   .parse(process.argv);
 
 const options = commander.opts();
-const systems = ['gdpi','ggn','dieghv'];
+const systems = ['puj', 'gdpi','ggn','dieghv'];
 
 // Main ----------------------------------------------------------------------
 
@@ -21,13 +20,8 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-if (!options.fromPuj && !options.toPuj) {
-  console.error('Please specify either -f or -t, see help with option -h');
-  process.exit(1);
-}
-
-if (!systems.includes(options.system)) {
-  console.error('Unknown option ' + options.system + ', please specify one of: ' + systems.join(" "));
+if (!options.from && !options.to) {
+  console.error('Please specify -f and -t, see help with option -h');
   process.exit(1);
 }
 
@@ -38,11 +32,7 @@ rl.question('Enter input (press CTRL+C to exit): ', (lines) => {
   // Loop through each line and apply convertLine function
   for (let i = 0; i < linesArr.length; i++) {
     let out = "";
-    if (options.toPuj) {
-      out = convertLine(linesArr[i], "toPuj", options.system);
-    } else if (options.fromPuj) {
-      out = convertLine(linesArr[i], "fromPuj", options.system);
-    }
+    out = convertLine(linesArr[i], options.from, options.to);
     console.log(out);
   }
   

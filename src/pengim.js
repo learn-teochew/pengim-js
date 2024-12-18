@@ -196,39 +196,21 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
 
 // Apply conversion to each segmented element ("word")
 // Add delimiters around words that cannot be converted
-function convertWord(word, direction="fromPuj", system="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
-  if (direction == "toPuj") {
-    try {
-      if (["gdpi","ggn","dieghv"].includes(system)) {
-        let syllable = new Syllable(word, system);
-        return syllable.convert('puj');
-      } else {
-        throw new Error("Unrecognized system " + system);
-      } 
-    } catch(e) {
-      console.error(e.name + ": " + e.message);
-      return invalidLeftDelim + word + invalidRightDelim;
-    }
-  } else if (direction == "fromPuj") {
-    try {
-      let syllable = new Syllable(word, "puj");
-      if (["gdpi","ggn","dieghv"].includes(system)) {
-        return syllable.convert(system);
-      } else {
-        throw new Error("Unrecognized system" + system);
-      }
-    } catch(e) {
-      console.error(e.name + ": " + e.message);
-      return invalidLeftDelim + word + invalidRightDelim;
-    }
+function convertWord(word, from="puj", to="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
+  try {
+    let syllable = new Syllable(word, from);
+    return syllable.convert(to);
+  } catch(e) {
+    console.error(e.name + ": " + e.message);
+    return invalidLeftDelim + word + invalidRightDelim;
   }
 }
 
 // Apply conversion to entire line
-function convertLine(line, direction="fromPuj", system="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
+function convertLine(line, from="puj", to="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
   let result = [];
   for (const word of splitText(line)) {
-    result.push(convertWord(word, direction, system, invalidLeftDelim, invalidRightDelim));
+    result.push(convertWord(word, from, to, invalidLeftDelim, invalidRightDelim));
   }
   return result.join(" ");
 }
