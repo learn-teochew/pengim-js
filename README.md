@@ -17,9 +17,13 @@ Script in the webpage `index.html`.
 
 For offline testing, fire up a server on localhost first (e.g. `python3 -m http.server`).
 
+Online at: https://learnteochew.com/pengim-js/
+
 ## TODO
 
-* Handle punctuation and linebreaks in input
+* Handle punctuation, numerals, and linebreaks in input
 * Handle capitalization in input
 * Regional accents
-* Fielde dictionary romanization
+* Fielde dictionary romanization output
+* Fix `hngh`
+* Superscript tone numbers option
