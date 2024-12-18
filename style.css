@@ -1,5 +1,5 @@
 body {
-  font-size: 14pt;
+  font-size: 1.1rem;
 }
 
 p {
@@ -11,30 +11,29 @@ h1, h2 {
 }
 
 textarea {
-  font-size: 18pt;
-  width: 90%;
+  width: 95%;
   margin: auto;
   padding: 0.5em; 
+  font-size: 1.2em;
   font-family: serif;
   color: darkgreen;
+  background-color: white;
+}
+
+button, legend, label {
+  font-size: inherit;
+  line-height: inherit;
 }
 
 button {
-  font-size: 18pt;
   margin: auto;
-}
-
-legend {
-  font-size: 20pt;
-}
-
-label {
-  font-size: 20pt;
+  font-size: 1em;
 }
 
 div {
   margin: 0.8em;
   padding: 0.8em;
+  font-size: inherit;
 }
 
 .radio {
@@ -51,9 +50,11 @@ div {
 }
 
 #outputdiv {
-  font-size: 18pt;
+  font-size: 1.2em;
   background: white;
   padding: 0.5em;
 }
 
-
+fieldset {
+  width: 95%; 
+}
