@@ -35,25 +35,47 @@
     </div>
 
     <div class="lightblue">
-      <fieldset><legend>Scheme to convert to/from</legend>
+      <fieldset><legend>Convert from</legend>
         <div class="radio">
-          <input type="radio" id="gdpi" name="system" value="gdpi" checked/>
-          <label for="gdpi">Guangdong Pêng'im</label>
+          <input type="radio" id="in_puj" name="inputsystem" value="puj"/>
+          <label for="in_puj">Pe̍h-ūe-jī</label>
         </div>
         <div class="radio">
-          <input type="radio" id="ggn" name="system" value="ggn" />
-          <label for="ggn">Gaginang Peng'im</label>
+          <input type="radio" id="in_gdpi" name="inputsystem" value="gdpi" checked/>
+          <label for="in_gdpi">Guangdong Pêng'im</label>
         </div>
         <div class="radio">
-          <input type="radio" id="dieghv" name="system" value="dieghv" />
-          <label for="dieghv">Dieghv</label>
+          <input type="radio" id="in_ggn" name="inputsystem" value="ggn" />
+          <label for="in_ggn">Gaginang Peng'im</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="in_dieghv" name="inputsystem" value="dieghv" />
+          <label for="in_dieghv">Dieghv</label>
         </div>
       </fieldset>
+      <fieldset><legend>Convert to</legend>
+        <div class="radio">
+          <input type="radio" id="out_puj" name="outputsystem" value="puj" checked/>
+          <label for="out_puj">Pe̍h-ūe-jī</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_gdpi" name="outputsystem" value="gdpi"/>
+          <label for="out_gdpi">Guangdong Pêng'im</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_ggn" name="outputsystem" value="ggn" />
+          <label for="out_ggn">Gaginang Peng'im</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_dieghv" name="outputsystem" value="dieghv" />
+          <label for="out_dieghv">Dieghv</label>
+        </div>
+      </fieldset>
+
     </div>
 
     <div class="lightblue">
-      <button id="topuj_button">Convert to Pe̍h-ūe-jī</button>
-      <button id="frompuj_button">Convert from Pe̍h-ūe-jī</button>
+      <button id="convertbutton">Convert</button>
     </div>
 
     <div class="lightpink">
