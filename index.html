@@ -10,13 +10,76 @@
 
   <body>
     <div class="padbox">
-    <h1>Teochew Romanization Converter</h1>
-      <p>Converts between different romanization systems for the <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a> language. Currently supported:</p>
+      <h1>Teochew Romanization Converter • 潮州話拼音系統轉換器</h1>
+      <p>Converts between different romanization systems for the <a href="https://en.wikipedia.org/wiki/Teochew_Min">Teochew</a> language.</p>
+      <p>轉換<a href="https://zh.wikipedia.org/wiki/%E6%BD%AE%E5%B7%9E%E8%AF%9D">潮州話</a>不同的羅馬拼音系統。</p>
+      <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
+    </div>
+
+    <div class="lightblue">
+      <h2>Input • 輸入</h2>
+      <textarea id="input" name="input" rows="4">le2 gai5 ka1 chng1 zing1 dua7</textarea>
+    </div>
+
+    <div class="lightblue">
+      <fieldset><legend>Convert from • 輸入系統</legend>
+        <div class="radio">
+          <input type="radio" id="in_puj" name="inputsystem" value="puj"/>
+          <label for="in_puj">Pe̍h-ūe-jī 潮州白話字</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="in_gdpi" name="inputsystem" value="gdpi" checked/>
+          <label for="in_gdpi">Guangdong Pêng'im 潮州話拼音方案</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="in_ggn" name="inputsystem" value="ggn" />
+          <label for="in_ggn">Gaginang Peng'im 家己人拼音</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="in_dieghv" name="inputsystem" value="dieghv" />
+          <label for="in_dieghv">Dieghv 潮語拼音</label>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>Convert to • 輸出系統</legend>
+        <div class="radio">
+          <input type="radio" id="out_puj" name="outputsystem" value="puj" checked/>
+          <label for="out_puj">Pe̍h-ūe-jī 潮州白話字</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_gdpi" name="outputsystem" value="gdpi"/>
+          <label for="out_gdpi">Guangdong Pêng'im 潮州話拼音方案</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_ggn" name="outputsystem" value="ggn" />
+          <label for="out_ggn">Gaginang Peng'im 家己人拼音</label>
+        </div>
+        <div class="radio">
+          <input type="radio" id="out_dieghv" name="outputsystem" value="dieghv" />
+          <label for="out_dieghv">Dieghv 潮語拼音</label>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="lightblue">
+      <button id="convertbutton">Convert • 轉換</button>
+    </div>
+
+    <div class="lightpink">
+      <h2>Output • 輸出</h2>
+      <div style="" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
+      <p>Invalid input syllables will be marked in red and not be converted.</p>
+      <p>無效的輸入音節將會以紅色標記並且不會被轉換。</p>
+    </div>
+
+    <div>
+      <h2>Details</h2>
+      <p>Currently supported romanization systems:</p>
       <ul>
-        <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a></li>
-        <li><a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a></li>
-        <li><a href="https://docs.google.com/document/d/187VokH_NLN4H_fZntbEfFFMdiqZKhZBQUEhI9y7-8vo/mobilebasic">Gaginang Peng'im (GGN)</a></li>
-        <li><a href="https://github.com/kahaani/dieghv">Dieghv</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a> • <a href="https://zh.wikipedia.org/wiki/%E6%BD%AE%E5%B7%9E%E7%99%BD%E8%A9%B1%E5%AD%97">潮州白話字</a>（也名汕頭教會羅馬字）</li>
+        <li><a href="https://en.wikipedia.org/wiki/Peng%27im">Guangdong Pêng'im (GDPI)</a> • 廣東省教育部門<a href="https://zh.wikipedia.org/wiki/%E6%BD%AE%E5%B7%9E%E8%A9%B1%E6%8B%BC%E9%9F%B3%E6%96%B9%E6%A1%88">潮州話拼音方案</a>（潮拼）</li>
+        <li><a href="https://docs.google.com/document/d/187VokH_NLN4H_fZntbEfFFMdiqZKhZBQUEhI9y7-8vo/mobilebasic">Gaginang Peng'im (GGN)</a> (used in the <a href="https://tcknow.com/">WhatTCSay3</a> dictionary app) • 家己人拼音</li>
+        <li><a href="https://github.com/kahaani/dieghv">Dieghv</a> (used in the <a href="https://github.com/kahaani/dieghv">dieghv input module for RIME</a>) • 潮語拼音（與<a href="https://github.com/kahaani/dieghv">潮州拼音輸入法</a>使用）</li>
       </ul>
 
       <p><strong>NB: Still in beta testing!</strong> <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a> for this Javascript project. For another implementation in Python, try our <a href="https://github.com/learn-teochew/parsetc">parsetc</a> library.</p>
@@ -29,63 +92,6 @@
         <li>Punctuation will be removed</li>
         <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
       </ul>
-    </div>
-    <div class="lightblue">
-      <h2>Input</h2>
-      <textarea id="input" name="input" rows="4">le2 gai5 ka1 chng1 zing1 dua7</textarea>
-    </div>
-
-    <div class="lightblue">
-      <fieldset><legend>Convert from</legend>
-        <div class="radio">
-          <input type="radio" id="in_puj" name="inputsystem" value="puj"/>
-          <label for="in_puj">Pe̍h-ūe-jī</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="in_gdpi" name="inputsystem" value="gdpi" checked/>
-          <label for="in_gdpi">Guangdong Pêng'im</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="in_ggn" name="inputsystem" value="ggn" />
-          <label for="in_ggn">Gaginang Peng'im</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="in_dieghv" name="inputsystem" value="dieghv" />
-          <label for="in_dieghv">Dieghv</label>
-        </div>
-      </fieldset>
-      <fieldset><legend>Convert to</legend>
-        <div class="radio">
-          <input type="radio" id="out_puj" name="outputsystem" value="puj" checked/>
-          <label for="out_puj">Pe̍h-ūe-jī</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="out_gdpi" name="outputsystem" value="gdpi"/>
-          <label for="out_gdpi">Guangdong Pêng'im</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="out_ggn" name="outputsystem" value="ggn" />
-          <label for="out_ggn">Gaginang Peng'im</label>
-        </div>
-        <div class="radio">
-          <input type="radio" id="out_dieghv" name="outputsystem" value="dieghv" />
-          <label for="out_dieghv">Dieghv</label>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="lightblue">
-      <button id="convertbutton">Convert</button>
-    </div>
-
-    <div class="lightpink">
-      <h2>Output</h2>
-      <div style="" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
-      <p>Invalid input syllables will be marked in red and not be converted.</p>
-    </div>
-
-    <div>
-      <p>Made by <a href="https://learnteochew.com/">LearnTeochew.com</a>; visit our main site to learn more about the Teochew language.</p>
     </div>
 
   </body>
