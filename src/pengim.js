@@ -116,6 +116,8 @@ class Syllable {
       [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, ggn);
     } else if (verbatimSystem == "dieghv") {
       [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, dieghv);
+    } else {
+      throw new Error("Unsupported system " + verbatimSystem);
     }
   }
 
@@ -124,35 +126,41 @@ class Syllable {
     return addToneDiacriticPujLike(toneless, this.tonenumber, tones);
   }
 
-  get puj() {
-    return this.returnPuj();
+  returnGdpiLike(data) {
+    // GDPI-like systems
+    let initial = "";
+    let medial = "";
+    let coda = "";
+    if ( this.initial in data.initialFromPuj ) {
+      initial = data.initialFromPuj[this.initial];
+    } else {
+      throw new Error("Initial not recognized: " + this.initial);
+    }
+    if ( this.medial in data.medialFromPuj ) {
+      medial = data.medialFromPuj[this.medial];
+    } else {
+      throw new Error("Medial not recognized: " + this.medial);
+    }
+    if ( this.coda in data.codaFromPuj ) {
+      coda = data.codaFromPuj[this.coda];
+    } else {
+      throw new Error("Coda not recognized: " + this.coda);
+    }
+    return [initial, medial, coda, this.tonenumber].join("");
   }
-}
 
-function pujToGdpiLike(syllable, data) {
-  // PUJ with tone diacritics to GDPI-like
-  let res = parsePujSyllable(syllable);
-  if (res[3] == -1) {
-    return "[" + syllable  + "]";
-  } else {
-    // TODO Catch exception if segments not in dicts
-    if ( res[0] in data.initialFromPuj ) {
-      res[0] = data.initialFromPuj[res[0]];
-    } else {
-      throw new Error("Initial not recognized: " + res[0]);
+  convert(system) {
+    if (system == "puj") {
+      return this.returnPuj();
+    } else if (system == "gdpi") {
+      return this.returnGdpiLike(gdpi);
+    } else if (system == "ggn") {
+      return this.returnGdpiLike(ggn);
+    } else if (system == "dieghv") {
+      return this.returnGdpiLike(dieghv);
     }
-    if ( res[1] in data.medialFromPuj ) {
-      res[1] = data.medialFromPuj[res[1]];
-    } else {
-      throw new Error("Medial not recognized: " + res[1]);
-    }
-    if ( res[2] in data.codaFromPuj ) {
-      res[2] = data.codaFromPuj[res[2]];
-    } else {
-      throw new Error("Final not recognized: " + res[2]);
-    }
-    return res.join("");
   }
+
 }
 
 function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
@@ -191,20 +199,21 @@ function convertWord(word, direction="fromPuj", system="gdpi", invalidLeftDelim=
     try {
       if (["gdpi","ggn","dieghv"].includes(system)) {
         let syllable = new Syllable(word, system);
-        return syllable.puj;
-      }
+        return syllable.convert('puj');
+      } else {
+        throw new Error("Unrecognized system " + system);
+      } 
     } catch(e) {
       console.error(e.name + ": " + e.message);
       return invalidLeftDelim + word + invalidRightDelim;
     }
   } else if (direction == "fromPuj") {
     try {
-      if (system == "gdpi") {
-        return pujToGdpiLike(word, gdpi);
-      } else if (system == "ggn") {
-        return pujToGdpiLike(word, ggn);
-      } else if (system == "dieghv") {
-        return pujToGdpiLike(word, dieghv);
+      let syllable = new Syllable(word, "puj");
+      if (["gdpi","ggn","dieghv"].includes(system)) {
+        return syllable.convert(system);
+      } else {
+        throw new Error("Unrecognized system" + system);
       }
     } catch(e) {
       console.error(e.name + ": " + e.message);
