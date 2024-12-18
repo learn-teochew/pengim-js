@@ -3,13 +3,17 @@
 import * as gdpi from "./data-gdpi.js";
 import * as ggn from "./data-ggn.js";
 import * as dieghv from "./data-dieghv.js";
+import * as fielde from "./data-fielde.js";
 import * as pujtones from "./data-tones-puj.js";
+import * as fieldetones from "./data-tones-fielde.js";
 
 const alldata = {
   'gdpi' : gdpi,
   'ggn' : ggn,
   'dieghv' : dieghv,
-  'pujtones' : pujtones
+  'fielde' : fielde,
+  'pujtones' : pujtones,
+  'fieldetones' : fieldetones
 }
 
 // Functions ------------------------------------------------------------------
@@ -40,6 +44,7 @@ function segmentPujSyllable(syllable) {
     res[1] = res[1].slice(0,-2);
     res[3] = "ng";
   }
+  // TODO solitary m, ngh, hngh
   return res;
 }
 
@@ -75,6 +80,74 @@ function parsePujSyllable(syllable) {
   }
   return [res[1], res[2], res[3], toneNumber];
 }
+
+function segmentFieldeSyllable(syllable) {
+  // TODO handle error if syllable does not match regex
+  let res = syllable.match(fielde.syllableRe);
+  // analyze solitary "ng" as final
+  if (res[1] == "ng" && res[2] == "" && res[3] == "") {
+    res[3] = "ng";
+    res[1] = "";
+    res[2] = "";
+  }
+  // ng finals with no vowel
+  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
+    res[1] = res[1].slice(0,-2);
+    res[3] = "ng";
+  }
+  let [initial, medial, coda] = ["","",""];
+  if ( res[1] in fielde.initialToPuj ) {
+    initial = fielde.initialToPuj[res[1]];
+  } else {
+    throw new Error("Initial not recognized: " + initial);
+  }
+  if ( res[2] + res[3] in fielde.finalToPuj ) {
+    [medial, coda] = fielde.finalToPuj[res[2] + res[3]];
+  } else {
+    throw new Error("Final not recognized: " + res[2] + res[3]);
+  }
+  return [syllable, initial, medial, coda];
+}
+
+function parseFieldeSyllable(syllable) {
+  let strippedWord = "";
+  let toneNumber = 0;
+  let wordNormalized = syllable.normalize('NFD');
+  for (let i = 0; i < wordNormalized.length; i++) {
+    let char = wordNormalized[i];
+    let charCode = char.charCodeAt(0);
+    // Combining Diacritical Marks block 0300-036F
+    if (charCode >= Number("0x300") && charCode <= Number("0x36F")) {
+      if (charCode in fieldetones.toneCodeToNumber) {
+        toneNumber = fieldetones.toneCodeToNumber[charCode];
+      } else if (charCode == Number("0x324")) {
+        // combining diaeresis below
+        strippedWord += wordNormalized[i];
+      } else {
+        throw new Error("Diacritic not used in Fielde: " + charCode);
+      }
+    } else {
+      // add non-diacritic character to stripped syllable
+      strippedWord += char;
+    }
+  }
+  let res = segmentFieldeSyllable(strippedWord);
+  if (toneNumber == 0) {
+    if (res[3].match(/[hpkt]/)) {
+      toneNumber = 4;
+    } else {
+      toneNumber = 1;
+    }
+  } else if (toneNumber == 58) {
+    if (res[3].match(/[hpkt]/)) {
+      toneNumber = 8;
+    } else {
+      toneNumber = 5;
+    }
+  }
+  return [res[1], res[2], res[3], toneNumber];
+}
+
 
 function parseGdpiLikeSyllable(syllable, system) {
   // TODO handle error if syllable does not match regex
@@ -119,6 +192,8 @@ class Syllable {
       [this.initial, this.medial, this.coda, this.tonenumber] = parsePujSyllable(verbatim);
     } else if (["gdpi", "ggn", "dieghv"].includes(verbatimSystem)) {
       [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, verbatimSystem);
+    } else if (verbatimSystem == "fielde") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parseFieldeSyllable(verbatim);
     } else {
       throw new Error("Unsupported system " + verbatimSystem);
     }
@@ -199,6 +274,7 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
 function convertWord(word, from="puj", to="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
   try {
     let syllable = new Syllable(word, from);
+    // console.log(syllable);
     return syllable.convert(to);
   } catch(e) {
     console.error(e.name + ": " + e.message);
