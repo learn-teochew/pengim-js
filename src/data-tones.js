@@ -1,4 +1,4 @@
-export const pujCodeToNumber = {
+export const toneCodeToNumber = {
   0x301 : 2,
   0x300 : 3,
   0x302 : 5,
@@ -9,7 +9,7 @@ export const pujCodeToNumber = {
   0x307 : 8
 };
 
-export const pujNumberToCode = {
+export const toneNumberToCode = {
   2 : 0x301 ,
   3 : 0x300 ,
   5 : 0x302 ,

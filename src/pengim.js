@@ -46,8 +46,8 @@ function parsePujSyllable(syllable) {
     let charCode = char.charCodeAt(0);
     // Combining Diacritical Marks block 0300-036F
     if (charCode >= Number("0x300") && charCode <= Number("0x36F")) {
-      if (charCode in tones.pujCodeToNumber) {
-        toneNumber = tones.pujCodeToNumber[charCode];
+      if (charCode in tones.toneCodeToNumber) {
+        toneNumber = tones.toneCodeToNumber[charCode];
       } else if (charCode == Number("0x324")) {
         // combining diaeresis below
         strippedWord += wordNormalized[i];
@@ -68,16 +68,6 @@ function parsePujSyllable(syllable) {
     }
   }
   return [res[1], res[2], res[3], toneNumber];
-}
-
-function pujToPujn(syllable) {
-  // PUJ with tone diacritics to PUJ with tone number
-  let res = parsePujSyllable(syllable);
-  if (res[3] == -1) { // TODO change this to try catch
-    return "[" + syllable  + "]";
-  } else {
-    return res.join("");
-  }
 }
 
 function pujToGdpiLike(syllable, data) {
@@ -109,39 +99,43 @@ function pujToGdpiLike(syllable, data) {
 function parseGdpiLikeSyllable(syllable, data) {
   // TODO handle error if syllable does not match regex
   let res = syllable.normalize('NFC').match(data.syllableRe);
+  let initial = res[1];
+  let medial = res[2];
+  let coda = res[3];
+  let tonenumber = res[4];
+  // Fix cases not caught by regex
   // analyze solitary "ng" as final
-  if (res[1] == "ng" && res[2] == "" && res[3] == "") {
-    res[3] = "ng";
-    res[1] = "";
-    res[2] = "";
+  if (initial == "ng" && medial == "" && coda == "") {
+    coda = "ng";
+    initial = "";
+    medial = "";
   }
   // ng finals with no vowel, e.g. cng1
-  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
-    res[1] = res[1].slice(0,-2);
-    res[3] = "ng";
+  if (initial.endsWith("ng") && initial.length > 2 && medial == "" && coda == "") {
+    initial = initial.slice(0,-2);
+    coda = "ng";
   }
-  return [res[1], res[2], res[3], res[4]];
+
+  // Convert to PUJ + numeric tone
+  if ( initial in data.initialToPuj ) {
+    initial = data.initialToPuj[initial];
+  } else {
+    throw new Error("Initial not recognized: " + initial);
+  }
+  if ( medial in data.medialToPuj ) {
+    medial = data.medialToPuj[medial];
+  } else {
+    throw new Error("Medial not recognized: " + medial);
+  }
+  if ( coda in data.codaToPuj ) {
+    coda = data.codaToPuj[coda];
+  } else {
+    throw new Error("Coda not recognized: " + coda);
+  }
+  return [initial, medial, coda, tonenumber];
 }
 
-function gdpiLikeToPuj(syllable, data) {
-  // GDPI-like to PUJ with tone diacritics
-  let res = parseGdpiLikeSyllable(syllable, data);
-  if ( res[0] in data.initialToPuj ) {
-    res[0] = data.initialToPuj[res[0]];
-  } else {
-    throw new Error("Initial not recognized: " + res[0]);
-  }
-  if ( res[1] in data.medialToPuj ) {
-    res[1] = data.medialToPuj[res[1]];
-  } else {
-    throw new Error("Medial not recognized: " + res[1]);
-  }
-  if ( res[2] in data.codaToPuj ) {
-    res[2] = data.codaToPuj[res[2]];
-  } else {
-    throw new Error("Coda not recognized: " + res[2]);
-  }
-  let toneless = res.slice(0,3).join("");
+function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
   // Add diacritic on first vowel that is not i
@@ -153,6 +147,8 @@ function gdpiLikeToPuj(syllable, data) {
   } else if (toneless.match(/[nm]/)) {
     // Else on first n or m
     toneLetterIndex = toneless.match(/[nm]/).index;
+  } else {
+    throw new Error("Cannot place tone diacritic on " + toneless);
   }
   let pre = toneless.slice(0,toneLetterIndex+1);
   let post = "";
@@ -161,12 +157,18 @@ function gdpiLikeToPuj(syllable, data) {
   }
   // Default no diacritic for tones 1 and 4
   let toneDiacritic = "";
-  if (res[3] in tones.pujNumberToCode) {
-    let toneCodePoint = tones.pujNumberToCode[res[3]];
+  if (tonenumber in tonedata.toneNumberToCode) {
+    let toneCodePoint = tonedata.toneNumberToCode[tonenumber];
     toneDiacritic = String.fromCodePoint(toneCodePoint);
   }
   let withTone = [pre, toneDiacritic, post].join("").normalize("NFC");
   return withTone;
+}
+
+function gdpiLikeToPuj(syllable, data, tonedata) {
+  let res = parseGdpiLikeSyllable(syllable, data);
+  let toneless = res.slice(0,3).join("").normalize("NFC");
+  return addToneDiacriticPujLike(toneless, res[3], tonedata);
 }
 
 // Apply conversion to each word
@@ -174,11 +176,11 @@ function convertWord(word, direction="fromPuj", system="gdpi", invalidLeftDelim=
   if (direction == "toPuj") {
     try {
       if (system == "gdpi") {
-        return gdpiLikeToPuj(word, gdpi);
+        return gdpiLikeToPuj(word, gdpi, tones);
       } else if (system == "ggn") {
-        return gdpiLikeToPuj(word, ggn);
+        return gdpiLikeToPuj(word, ggn, tones);
       } else if (system == "dieghv") {
-        return gdpiLikeToPuj(word, dieghv);
+        return gdpiLikeToPuj(word, dieghv, tones);
       }
     } catch(e) {
       console.error(e.name + ": " + e.message);
