@@ -118,6 +118,15 @@ class Syllable {
       [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, dieghv);
     }
   }
+
+  returnPuj() {
+    let toneless = [this.initial, this.medial, this.coda].join("");
+    return addToneDiacriticPujLike(toneless, this.tonenumber, tones);
+  }
+
+  get puj() {
+    return this.returnPuj();
+  }
 }
 
 function pujToGdpiLike(syllable, data) {
@@ -176,22 +185,13 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
   return withTone;
 }
 
-function gdpiLikeToPuj(syllable, data, tonedata) {
-  let res = parseGdpiLikeSyllable(syllable, data);
-  let toneless = res.slice(0,3).join("").normalize("NFC");
-  return addToneDiacriticPujLike(toneless, res[3], tonedata);
-}
-
 // Apply conversion to each word
 function convertWord(word, direction="fromPuj", system="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
   if (direction == "toPuj") {
     try {
-      if (system == "gdpi") {
-        return gdpiLikeToPuj(word, gdpi, tones);
-      } else if (system == "ggn") {
-        return gdpiLikeToPuj(word, ggn, tones);
-      } else if (system == "dieghv") {
-        return gdpiLikeToPuj(word, dieghv, tones);
+      if (["gdpi","ggn","dieghv"].includes(system)) {
+        let syllable = new Syllable(word, system);
+        return syllable.puj;
       }
     } catch(e) {
       console.error(e.name + ": " + e.message);
