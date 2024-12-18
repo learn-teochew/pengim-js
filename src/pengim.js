@@ -3,13 +3,13 @@
 import * as gdpi from "./data-gdpi.js";
 import * as ggn from "./data-ggn.js";
 import * as dieghv from "./data-dieghv.js";
-import * as tones from "./data-tones.js";
+import * as pujtones from "./data-tones-puj.js";
 
 const alldata = {
   'gdpi' : gdpi,
   'ggn' : ggn,
   'dieghv' : dieghv,
-  'tones' : tones
+  'pujtones' : pujtones
 }
 
 // Functions ------------------------------------------------------------------
@@ -52,8 +52,8 @@ function parsePujSyllable(syllable) {
     let charCode = char.charCodeAt(0);
     // Combining Diacritical Marks block 0300-036F
     if (charCode >= Number("0x300") && charCode <= Number("0x36F")) {
-      if (charCode in tones.toneCodeToNumber) {
-        toneNumber = tones.toneCodeToNumber[charCode];
+      if (charCode in pujtones.toneCodeToNumber) {
+        toneNumber = pujtones.toneCodeToNumber[charCode];
       } else if (charCode == Number("0x324")) {
         // combining diaeresis below
         strippedWord += wordNormalized[i];
@@ -126,7 +126,7 @@ class Syllable {
 
   returnPuj() {
     let toneless = [this.initial, this.medial, this.coda].join("");
-    return addToneDiacriticPujLike(toneless, this.tonenumber, tones);
+    return addToneDiacriticPujLike(toneless, this.tonenumber, pujtones);
   }
 
   returnGdpiLike(system) {
@@ -168,7 +168,7 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
   // Add diacritic on first vowel that is not i
-  if (toneless.match(/[aeouṳ]/)) {
+  if (toneless.match(/[aeouo̤ṳ]/)) {
     toneLetterIndex = toneless.match(/[aeouṳ]/).index;
   } else if (toneless.match(/i/)) {
     // Else on first i
