@@ -37,7 +37,6 @@ function segmentPujSyllable(syllable) {
 }
 
 function parsePujSyllable(syllable) {
-  // TODO Add option parse without tone markings
   let strippedWord = "";
   let toneNumber = 0;
   let wordNormalized = syllable.normalize('NFD');
@@ -70,6 +69,57 @@ function parsePujSyllable(syllable) {
   return [res[1], res[2], res[3], toneNumber];
 }
 
+function parseGdpiLikeSyllable(syllable, data) {
+  // TODO handle error if syllable does not match regex
+  let res = syllable.normalize('NFC').match(data.syllableRe);
+  let [initial, medial, coda, tonenumber] = res.slice(1,5);
+  // Fix cases not caught by regex
+  // analyze solitary "ng" as final
+  if (initial == "ng" && medial == "" && coda == "") {
+    coda = "ng";
+    initial = "";
+    medial = "";
+  }
+  // ng finals with no vowel, e.g. cng1
+  if (initial.endsWith("ng") && initial.length > 2 && medial == "" && coda == "") {
+    initial = initial.slice(0,-2);
+    coda = "ng";
+  }
+  // Convert to PUJ + numeric tone
+  if ( initial in data.initialToPuj ) {
+    initial = data.initialToPuj[initial];
+  } else {
+    throw new Error("Initial not recognized: " + initial);
+  }
+  if ( medial in data.medialToPuj ) {
+    medial = data.medialToPuj[medial];
+  } else {
+    throw new Error("Medial not recognized: " + medial);
+  }
+  if ( coda in data.codaToPuj ) {
+    coda = data.codaToPuj[coda];
+  } else {
+    throw new Error("Coda not recognized: " + coda);
+  }
+  return [initial, medial, coda, tonenumber];
+}
+
+class Syllable {
+  constructor(verbatim, verbatimSystem) {
+    this.verbatim = verbatim;
+    this.verbatimSystem = verbatimSystem;
+    if (verbatimSystem == "puj") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parsePujSyllable(verbatim);
+    } else if (verbatimSystem == "gdpi") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, gdpi);
+    } else if (verbatimSystem == "ggn") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, ggn);
+    } else if (verbatimSystem == "dieghv") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, dieghv);
+    }
+  }
+}
+
 function pujToGdpiLike(syllable, data) {
   // PUJ with tone diacritics to GDPI-like
   let res = parsePujSyllable(syllable);
@@ -94,45 +144,6 @@ function pujToGdpiLike(syllable, data) {
     }
     return res.join("");
   }
-}
-
-function parseGdpiLikeSyllable(syllable, data) {
-  // TODO handle error if syllable does not match regex
-  let res = syllable.normalize('NFC').match(data.syllableRe);
-  let initial = res[1];
-  let medial = res[2];
-  let coda = res[3];
-  let tonenumber = res[4];
-  // Fix cases not caught by regex
-  // analyze solitary "ng" as final
-  if (initial == "ng" && medial == "" && coda == "") {
-    coda = "ng";
-    initial = "";
-    medial = "";
-  }
-  // ng finals with no vowel, e.g. cng1
-  if (initial.endsWith("ng") && initial.length > 2 && medial == "" && coda == "") {
-    initial = initial.slice(0,-2);
-    coda = "ng";
-  }
-
-  // Convert to PUJ + numeric tone
-  if ( initial in data.initialToPuj ) {
-    initial = data.initialToPuj[initial];
-  } else {
-    throw new Error("Initial not recognized: " + initial);
-  }
-  if ( medial in data.medialToPuj ) {
-    medial = data.medialToPuj[medial];
-  } else {
-    throw new Error("Medial not recognized: " + medial);
-  }
-  if ( coda in data.codaToPuj ) {
-    coda = data.codaToPuj[coda];
-  } else {
-    throw new Error("Coda not recognized: " + coda);
-  }
-  return [initial, medial, coda, tonenumber];
 }
 
 function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
