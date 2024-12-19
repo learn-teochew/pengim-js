@@ -25,4 +25,3 @@ Online at: https://learnteochew.com/pengim-js/
 * Handle capitalization in input
 * Regional accents
 * Fix `hngh`, and `m` as final
-* Superscript tone numbers option
