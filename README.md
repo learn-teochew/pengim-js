@@ -24,6 +24,5 @@ Online at: https://learnteochew.com/pengim-js/
 * Handle punctuation, numerals, and linebreaks in input
 * Handle capitalization in input
 * Regional accents
-* Fielde dictionary romanization output
-* Fix `hngh`
+* Fix `hngh`, and `m` as final
 * Superscript tone numbers option

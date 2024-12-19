@@ -6,11 +6,11 @@ commander
   .version('1.0.0', '-v, --version')
   .usage('[OPTIONS]...')
   .option('-f, --from <name>', 'Scheme to convert from: puj, gdpi, ggn, dieghv, fielde', 'puj')
-  .option('-t, --to <name>', 'Scheme to convert to: puj, gdpi, ggn, dieghv', 'gdpi')
+  .option('-t, --to <name>', 'Scheme to convert to: puj, gdpi, ggn, dieghv, fielde', 'gdpi')
   .parse(process.argv);
 
 const options = commander.opts();
-const systems = ['puj', 'gdpi','ggn','dieghv'];
+const systems = ['puj', 'gdpi','ggn','dieghv', 'fielde'];
 
 // Main ----------------------------------------------------------------------
 

@@ -204,6 +204,24 @@ class Syllable {
     return addToneDiacriticPujLike(toneless, this.tonenumber, pujtones);
   }
 
+  returnFielde() {
+    let pujFinal = this.medial + this.coda;
+    let fieldeInitial = "";
+    let fieldeFinal = "";
+    if ( this.initial in alldata['fielde'].initialFromPuj ) {
+      fieldeInitial = alldata['fielde'].initialFromPuj[this.initial];
+    } else {
+      throw new Error("Initial not recognized: " + this.initial);
+    }
+    if ( pujFinal in alldata['fielde'].finalFromPuj ) {
+      fieldeFinal = alldata['fielde'].finalFromPuj[pujFinal];
+    } else {
+      throw new Error("Final not recognized: " + pujFinal);
+    }
+    let toneless = fieldeInitial + fieldeFinal;
+    return addToneDiacriticPujLike(toneless, this.tonenumber, fieldetones);
+  }
+
   returnGdpiLike(system) {
     // GDPI-like systems
     let initial = "";
@@ -228,10 +246,12 @@ class Syllable {
   }
 
   convert(system) {
-    if (system == "puj") {
+    if ( system == "puj" ) {
       return this.returnPuj();
-    } else if (["gdpi","ggn","dieghv"].includes(system)) {
+    } else if ( ["gdpi","ggn","dieghv"].includes(system) ) {
       return this.returnGdpiLike(system);
+    } else if ( system == "fielde" ) {
+      return this.returnFielde();
     } else {
       throw new Error("Unrecognized system " + system);
     }
@@ -243,8 +263,8 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
   // Add tone diacritic according to orthographic rules
   let toneLetterIndex = -1;
   // Add diacritic on first vowel that is not i
-  if (toneless.match(/[aeouo̤ṳ]/)) {
-    toneLetterIndex = toneless.match(/[aeouṳ]/).index;
+  if (toneless.match(/[aeouo̤ṳw]/)) {
+    toneLetterIndex = toneless.match(/[aeouṳo̤w]/).index;
   } else if (toneless.match(/i/)) {
     // Else on first i
     toneLetterIndex = toneless.match(/i/).index;
