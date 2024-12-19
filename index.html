@@ -24,7 +24,7 @@
       <textarea id="input" name="input" rows="4">Le2 gai5 ka1-chng1 zing1 dua7!</textarea>
     </div>
 
-    <div class="lightblue">
+    <div class="lightblue" id="fieldsetdiv">
       <fieldset><legend>Convert from • 輸入系統</legend>
         <div class="radio">
           <input type="radio" id="in_puj" name="inputsystem" value="puj"/>
@@ -32,11 +32,11 @@
         </div>
         <div class="radio">
           <input type="radio" id="in_pujn" name="inputsystem" value="pujn"/>
-          <label for="in_pujn">Pe̍h-ūe-jī with tone numbers 潮州白話字</label>
+          <label for="in_pujn">Pe̍h-ūe-jī + tone numbers 潮州白話字</label>
         </div>
         <div class="radio">
           <input type="radio" id="in_gdpi" name="inputsystem" value="gdpi" checked/>
-          <label for="in_gdpi">Guangdong Pêng'im 潮州話拼音方案</label>
+          <label for="in_gdpi">Guangdong Pêng'im 潮拼</label>
         </div>
         <div class="radio">
           <input type="radio" id="in_ggn" name="inputsystem" value="ggn" />
@@ -48,7 +48,7 @@
         </div>
         <div class="radio">
           <input type="radio" id="in_fielde" name="inputsystem" value="fielde" />
-          <label for="in_fielde">Fielde Dictionary 斐氏《汕頭方言詞典》</label>
+          <label for="in_fielde">Fielde Dictionary 斐氏詞典</label>
         </div>
       </fieldset>
 
@@ -59,11 +59,11 @@
         </div>
         <div class="radio">
           <input type="radio" id="out_pujn" name="outputsystem" value="pujn"/>
-          <label for="out_pujn">Pe̍h-ūe-jī with tone numbers 潮州白話字</label>
+          <label for="out_pujn">Pe̍h-ūe-jī + tone numbers 潮州白話字</label>
         </div>
         <div class="radio">
           <input type="radio" id="out_gdpi" name="outputsystem" value="gdpi"/>
-          <label for="out_gdpi">Guangdong Pêng'im 潮州話拼音方案</label>
+          <label for="out_gdpi">Guangdong Pêng'im 潮拼</label>
         </div>
         <div class="radio">
           <input type="radio" id="out_ggn" name="outputsystem" value="ggn" />
@@ -75,7 +75,7 @@
         </div>
         <div class="radio">
           <input type="radio" id="out_fielde" name="outputsystem" value="fielde" />
-          <label for="out_fielde">Fielde Dictionary 斐氏《汕頭方言詞典》</label>
+          <label for="out_fielde">Fielde Dictionary 斐氏詞典</label>
         </div>
       </fieldset>
     </div>
@@ -83,19 +83,28 @@
     <div class="lightblue">
       <button id="convertbutton">Convert • 轉換</button>
       <input type="checkbox" id="superscript" name="superscript" />
-      <label for="superscript">Superscript tone numbers</label>
+      <label for="superscript">Superscript tone numbers in output</label>
     </div>
 
     <div class="lightpink">
       <h2>Output • 輸出</h2>
       <div id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
       <div id="ipadiv"><span style="color:grey;">[IPA will appear here]</span></div>
-      <p>Invalid input syllables will be marked in red and not be converted. Tone sandhi not computed.</p>
+      <p>Invalid input syllables will be marked in red and not be converted.</p>
       <p>無效的輸入音節將會以紅色標記並且不會被轉換。</p>
     </div>
 
     <div>
       <h2>Details</h2>
+
+      <ul>
+        <li>This tool converts romanized text only. Chinese characters are not supported.</li>
+        <li>Tones must be marked either by numbers (GDPI, GGN, Dieghv) or diacritics (PUJ, Fielde) on each syllable.</li>
+        <li>Punctuation, spacing, and numerals in the input will be preserved.</li>
+        <li>Tone sandhi will not be computed because it depends on word segmentation.</li>
+        <li>Invalid input syllabes will not be converted, and will be highlighted in red.</li>
+      </ul>
+
       <p>Currently supported romanization systems:</p>
       <ul>
         <li><a href="https://en.wikipedia.org/wiki/Teochew_Romanization">Pe̍h-ūe-jī (PUJ)</a> • <a href="https://zh.wikipedia.org/wiki/%E6%BD%AE%E5%B7%9E%E7%99%BD%E8%A9%B1%E5%AD%97">潮州白話字</a>（也名汕頭教會羅馬字）</li>
@@ -107,11 +116,6 @@
 
       <p><strong>NB: Still in beta testing!</strong> <a href="https://github.com/learn-teochew/pengim-js">GitHub repository</a> for this Javascript project. For another implementation in Python, try our <a href="https://github.com/learn-teochew/parsetc">parsetc</a> library.</p>
 
-      <p>Requirements for input:</p>
-
-      <ul>
-        <li>Tones must be marked either by numbers (GDPI) or diacritics (PUJ) on each syllable</li>
-      </ul>
     </div>
 
   </body>
