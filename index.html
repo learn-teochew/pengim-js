@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="style.css">
     <title>Teochew Romanization Converter</title>
     <script src="./webscript.js" type="module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gentium+Plus&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
 
   <body>
@@ -85,8 +88,9 @@
 
     <div class="lightpink">
       <h2>Output • 輸出</h2>
-      <div style="" id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
-      <p>Invalid input syllables will be marked in red and not be converted.</p>
+      <div id="outputdiv"><span style="color:grey;">[output will appear here]</span></div>
+      <div id="ipadiv"><span style="color:grey;">[IPA will appear here]</span></div>
+      <p>Invalid input syllables will be marked in red and not be converted. Tone sandhi not computed.</p>
       <p>無效的輸入音節將會以紅色標記並且不會被轉換。</p>
     </div>
 

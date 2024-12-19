@@ -4,6 +4,7 @@ import * as gdpi from "./data-gdpi.js";
 import * as ggn from "./data-ggn.js";
 import * as dieghv from "./data-dieghv.js";
 import * as fielde from "./data-fielde.js";
+import * as ipa from "./data-ipa.js";
 import * as pujtones from "./data-tones-puj.js";
 import * as fieldetones from "./data-tones-fielde.js";
 
@@ -12,6 +13,7 @@ const alldata = {
   'ggn' : ggn,
   'dieghv' : dieghv,
   'fielde' : fielde,
+  'ipa' : ipa,
   'pujtones' : pujtones,
   'fieldetones' : fieldetones
 }
@@ -27,6 +29,19 @@ const superscriptnum = {
   7 : "⁷",
   8 : "⁸"
 }
+
+const ipatones = {
+  0 : "",
+  1 : "˧",
+  2 : "˥˧",
+  3 : "˨˩˧",
+  4 : "˨.",
+  5 : "˥",
+  6 : "˧˥",
+  7 : "˩",
+  8 : "˥."
+}
+
 
 // Functions ------------------------------------------------------------------
 
@@ -221,6 +236,42 @@ class Syllable {
     }
   }
 
+  returnIpa() {
+    let nasal = false;
+    let [ initial, medial, coda ] = [ this.initial, this.medial, this.coda ];
+    if ( this.coda.includes("ⁿ") ) {
+      nasal = true;
+      coda = this.coda.replace("ⁿ", "");
+    }
+    if ( initial in alldata['ipa'].initialFromPuj ) {
+      initial = alldata['ipa'].initialFromPuj[initial];
+    } else {
+      throw new Error("Initial not recognized: " + initial);
+    }
+    if ( medial in alldata['ipa'].medialFromPuj ) {
+      if ( nasal ) {
+        medial = "";
+        for ( let i = 0; i < this.medial.length; i++ ) {
+          medial += this.medial[i] + String.fromCodePoint("0x0303");
+        }
+      } else {
+        medial = alldata['ipa'].medialFromPuj[this.medial];
+      }
+    } else {
+      throw new Error("Medial not recognized: " + medial);
+    }
+    if ( coda in alldata['ipa'].codaFromPuj ) {
+      coda = alldata['ipa'].codaFromPuj[coda];
+    } else {
+      throw new Error("Coda not recognized: " + coda);
+    }
+    let toneletter = "";
+    if ( this.tonenumber in ipatones ) {
+      toneletter = ipatones[this.tonenumber];
+    }
+    return [ initial, medial, coda, toneletter ].join("");
+  }
+
   returnPuj() {
     let toneless = [this.initial, this.medial, this.coda].join("");
     return addToneDiacriticPujLike(toneless, this.tonenumber, pujtones);
@@ -288,6 +339,8 @@ class Syllable {
       return this.returnGdpiLike(system, superscript);
     } else if ( system == "fielde" ) {
       return this.returnFielde();
+    } else if (system == "ipa" ) {
+      return this.returnIpa();
     } else {
       throw new Error("Unrecognized system " + system);
     }

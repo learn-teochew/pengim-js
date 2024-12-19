@@ -15,4 +15,6 @@ button.addEventListener("click", function() {
   let convertedLine = convertLine(input, inputsystem, outputsystem, superscript, '<span style="color:red;">', '</span>');
   console.log(convertedLine);
   document.getElementById("outputdiv").innerHTML = convertedLine;
+  let ipaLine = convertLine(input, inputsystem, 'ipa', superscript, '<span style="color:red;">', '</span>');
+  document.getElementById("ipadiv").innerHTML = ipaLine;
 });
