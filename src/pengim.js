@@ -16,6 +16,18 @@ const alldata = {
   'fieldetones' : fieldetones
 }
 
+const superscriptnum = {
+  0 : "",
+  1 : "¹",
+  2 : "²",
+  3 : "³",
+  4 : "⁴",
+  5 : "⁵",
+  6 : "⁶",
+  7 : "⁷",
+  8 : "⁸"
+}
+
 // Functions ------------------------------------------------------------------
 
 function splitText(text) {
@@ -78,6 +90,14 @@ function parsePujSyllable(syllable) {
       toneNumber = 1;
     }
   }
+  return [res[1], res[2], res[3], toneNumber];
+}
+
+function parsePujnSyllable(syllable) {
+  // PUJ with tone numbers instead of diacritics
+  let segnum = syllable.match(/^(\D+)([012345678]*)$/);
+  let [toneless, toneNumber] = [segnum[1], segnum[2]];
+  let res = segmentPujSyllable(toneless);
   return [res[1], res[2], res[3], toneNumber];
 }
 
@@ -190,6 +210,8 @@ class Syllable {
     this.verbatimSystem = verbatimSystem;
     if (verbatimSystem == "puj") {
       [this.initial, this.medial, this.coda, this.tonenumber] = parsePujSyllable(verbatim);
+    } else if (verbatimSystem == "pujn") {
+      [this.initial, this.medial, this.coda, this.tonenumber] = parsePujnSyllable(verbatim);
     } else if (["gdpi", "ggn", "dieghv"].includes(verbatimSystem)) {
       [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, verbatimSystem);
     } else if (verbatimSystem == "fielde") {
@@ -202,6 +224,14 @@ class Syllable {
   returnPuj() {
     let toneless = [this.initial, this.medial, this.coda].join("");
     return addToneDiacriticPujLike(toneless, this.tonenumber, pujtones);
+  }
+
+  returnPujn(superscript=false) {
+    let tonenumber = this.tonenumber;
+    if ( superscript ) {
+      tonenumber = superscriptnum[this.tonenumber];
+    }
+    return [this.initial, this.medial, this.coda, tonenumber].join("");
   }
 
   returnFielde() {
@@ -244,17 +274,6 @@ class Syllable {
     }
     let tonenumber = this.tonenumber;
     if ( superscript ) {
-      let superscriptnum = {
-        0 : "",
-        1 : "¹",
-        2 : "²",
-        3 : "³",
-        4 : "⁴",
-        5 : "⁵",
-        6 : "⁶",
-        7 : "⁷",
-        8 : "⁸"
-      }
       tonenumber = superscriptnum[this.tonenumber];
     }
     return [initial, medial, coda, tonenumber].join("");
@@ -263,6 +282,8 @@ class Syllable {
   convert(system, superscript) {
     if ( system == "puj" ) {
       return this.returnPuj();
+    } else if ( system == "pujn" ) {
+      return this.returnPujn(superscript);
     } else if ( ["gdpi","ggn","dieghv"].includes(system) ) {
       return this.returnGdpiLike(system, superscript);
     } else if ( system == "fielde" ) {
