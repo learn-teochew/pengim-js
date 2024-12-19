@@ -56,6 +56,27 @@ function splitText(text) {
   return words;
 }
 
+function checkCase(text) {
+  let decomp = text.normalize("NFD");
+  // Unicode character class escape \p
+  // https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt
+  // u "Unicode" flag for regex
+  let matchLu = text.match(/\p{Lu}/gu);
+  let matchLuFirst = text[0].match(/\p{Lu}/gu);
+  let matchLl = text.match(/\p{Ll}/gu);
+  let capstatus = "";
+  if ( matchLu && matchLuFirst && matchLuFirst.length == 1 && matchLu.length == 1) {
+    capstatus = "initial";
+  } else if ( matchLu && !matchLl ) {
+    capstatus = "upper";
+  } else if ( matchLl && !matchLu ) {
+    capstatus = "lower";
+  } else {
+    capstatus = "mIxEd";
+  }
+  return capstatus;
+}
+
 function segmentPujSyllable(syllable) {
   // TODO handle error if syllable does not match regex
   const pujRe = /^([^aeiouṳ]*)([aeiouṳ]*)([hptkmngⁿ]*)$/;
@@ -223,14 +244,19 @@ class Syllable {
   constructor(verbatim, verbatimSystem) {
     this.verbatim = verbatim;
     this.verbatimSystem = verbatimSystem;
+    this.verbatimCase = checkCase(verbatim);
     if (verbatimSystem == "puj") {
-      [this.initial, this.medial, this.coda, this.tonenumber] = parsePujSyllable(verbatim);
+      [this.initial, this.medial, this.coda, this.tonenumber] =
+        parsePujSyllable(verbatim.toLowerCase());
     } else if (verbatimSystem == "pujn") {
-      [this.initial, this.medial, this.coda, this.tonenumber] = parsePujnSyllable(verbatim);
+      [this.initial, this.medial, this.coda, this.tonenumber] =
+        parsePujnSyllable(verbatim.toLowerCase());
     } else if (["gdpi", "ggn", "dieghv"].includes(verbatimSystem)) {
-      [this.initial, this.medial, this.coda, this.tonenumber] = parseGdpiLikeSyllable(verbatim, verbatimSystem);
+      [this.initial, this.medial, this.coda, this.tonenumber] =
+        parseGdpiLikeSyllable(verbatim.toLowerCase(), verbatimSystem);
     } else if (verbatimSystem == "fielde") {
-      [this.initial, this.medial, this.coda, this.tonenumber] = parseFieldeSyllable(verbatim);
+      [this.initial, this.medial, this.coda, this.tonenumber] =
+        parseFieldeSyllable(verbatim.toLowerCase());
     } else {
       throw new Error("Unsupported system " + verbatimSystem);
     }
@@ -331,19 +357,26 @@ class Syllable {
   }
 
   convert(system, superscript) {
+    let out = "";
     if ( system == "puj" ) {
-      return this.returnPuj();
+      out = this.returnPuj();
     } else if ( system == "pujn" ) {
-      return this.returnPujn(superscript);
+      out =  this.returnPujn(superscript);
     } else if ( ["gdpi","ggn","dieghv"].includes(system) ) {
-      return this.returnGdpiLike(system, superscript);
+      out =  this.returnGdpiLike(system, superscript);
     } else if ( system == "fielde" ) {
-      return this.returnFielde();
+      out =  this.returnFielde();
     } else if (system == "ipa" ) {
-      return this.returnIpa();
+      out =  this.returnIpa();
     } else {
       throw new Error("Unrecognized system " + system);
     }
+    if ( this.verbatimCase == "initial" && system != "ipa" ) {
+      out = out[0].toUpperCase() + out.slice(1,);
+    } else if ( this.verbatimCase == "upper" && system != "ipa" ) {
+      out = out.toUpperCase();
+    }
+    return out;
   }
 
 }
