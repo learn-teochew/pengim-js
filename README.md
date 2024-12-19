@@ -21,6 +21,5 @@ Online at: https://learnteochew.com/pengim-js/
 
 ## TODO
 
-* Handle punctuation, numerals, and linebreaks in input
 * Regional accents
 * Fix `hngh`, and `m` as final

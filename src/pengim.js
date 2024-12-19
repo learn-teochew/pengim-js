@@ -45,17 +45,6 @@ const ipatones = {
 
 // Functions ------------------------------------------------------------------
 
-function splitText(text) {
-  // TODO Split on punctuation and spaces but retain them
-  // remove all punctuation and replace with spaces
-  let newText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_~()]/g," ");
-  // split text into array of words
-  let words = newText.split(" ");
-  // remove any empty strings from array
-  words = words.filter(word => word !== "");
-  return words;
-}
-
 function checkCase(text) {
   let decomp = text.normalize("NFD");
   // Unicode character class escape \p
@@ -427,10 +416,19 @@ function convertWord(word, from="puj", to="gdpi", superscript, invalidLeftDelim,
 // Apply conversion to entire line
 function convertLine(line, from="puj", to="gdpi", superscript=false, invalidLeftDelim="[", invalidRightDelim="]") {
   let result = [];
-  for (const word of splitText(line)) {
-    result.push(convertWord(word, from, to, superscript, invalidLeftDelim, invalidRightDelim));
+  let splitRe = /(\p{P}|\p{Z}|\n)/gu;
+  let linesplit = line.split(splitRe);
+  for ( const word of linesplit ) {
+    if ( word.match(splitRe) ) {
+      // punctuation or space only
+      result.push(word);
+    } else if ( word.match(/^\d+$/) ) {
+      // numeral only
+      result.push(word);
+    } else 
+      result.push(convertWord(word, from, to, superscript, invalidLeftDelim, invalidRightDelim));
   }
-  return result.join(" ");
+  return result.join("");
 }
 
 export { convertLine };
