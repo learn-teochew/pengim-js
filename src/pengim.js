@@ -222,7 +222,7 @@ class Syllable {
     return addToneDiacriticPujLike(toneless, this.tonenumber, fieldetones);
   }
 
-  returnGdpiLike(system) {
+  returnGdpiLike(system, superscript=false) {
     // GDPI-like systems
     let initial = "";
     let medial = "";
@@ -242,14 +242,29 @@ class Syllable {
     } else {
       throw new Error("Coda not recognized: " + this.coda);
     }
-    return [initial, medial, coda, this.tonenumber].join("");
+    let tonenumber = this.tonenumber;
+    if ( superscript ) {
+      let superscriptnum = {
+        0 : "",
+        1 : "¹",
+        2 : "²",
+        3 : "³",
+        4 : "⁴",
+        5 : "⁵",
+        6 : "⁶",
+        7 : "⁷",
+        8 : "⁸"
+      }
+      tonenumber = superscriptnum[this.tonenumber];
+    }
+    return [initial, medial, coda, tonenumber].join("");
   }
 
-  convert(system) {
+  convert(system, superscript) {
     if ( system == "puj" ) {
       return this.returnPuj();
     } else if ( ["gdpi","ggn","dieghv"].includes(system) ) {
-      return this.returnGdpiLike(system);
+      return this.returnGdpiLike(system, superscript);
     } else if ( system == "fielde" ) {
       return this.returnFielde();
     } else {
@@ -291,11 +306,11 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
 
 // Apply conversion to each segmented element ("word")
 // Add delimiters around words that cannot be converted
-function convertWord(word, from="puj", to="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
+function convertWord(word, from="puj", to="gdpi", superscript, invalidLeftDelim, invalidRightDelim) {
   try {
     let syllable = new Syllable(word, from);
     // console.log(syllable);
-    return syllable.convert(to);
+    return syllable.convert(to, superscript);
   } catch(e) {
     console.error(e.name + ": " + e.message);
     return invalidLeftDelim + word + invalidRightDelim;
@@ -303,10 +318,10 @@ function convertWord(word, from="puj", to="gdpi", invalidLeftDelim="[", invalidR
 }
 
 // Apply conversion to entire line
-function convertLine(line, from="puj", to="gdpi", invalidLeftDelim="[", invalidRightDelim="]") {
+function convertLine(line, from="puj", to="gdpi", superscript=false, invalidLeftDelim="[", invalidRightDelim="]") {
   let result = [];
   for (const word of splitText(line)) {
-    result.push(convertWord(word, from, to, invalidLeftDelim, invalidRightDelim));
+    result.push(convertWord(word, from, to, superscript, invalidLeftDelim, invalidRightDelim));
   }
   return result.join(" ");
 }

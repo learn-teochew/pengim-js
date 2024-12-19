@@ -7,6 +7,7 @@ commander
   .usage('[OPTIONS]...')
   .option('-f, --from <name>', 'Scheme to convert from: puj, gdpi, ggn, dieghv, fielde', 'puj')
   .option('-t, --to <name>', 'Scheme to convert to: puj, gdpi, ggn, dieghv, fielde', 'gdpi')
+  .option('-s, --superscript', 'Superscript tone numbers (gdpi, ggn, dieghv only)')
   .parse(process.argv);
 
 const options = commander.opts();
@@ -32,7 +33,7 @@ rl.question('Enter input (press CTRL+C to exit): ', (lines) => {
   // Loop through each line and apply convertLine function
   for (let i = 0; i < linesArr.length; i++) {
     let out = "";
-    out = convertLine(linesArr[i], options.from, options.to);
+    out = convertLine(linesArr[i], options.from, options.to, options.superscript);
     console.log(out);
   }
   

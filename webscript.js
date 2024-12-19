@@ -7,8 +7,12 @@ button.addEventListener("click", function() {
   let input = document.getElementById("input").value;
   let inputsystem = document.querySelector('input[name="inputsystem"]:checked').value;
   let outputsystem = document.querySelector('input[name="outputsystem"]:checked').value;
+  let superscript = false;
+  if ( document.querySelector("#superscript").checked ) {
+    superscript = true;
+  }
   // Highlight invalid input syllables in red
-  let convertedLine = convertLine(input, inputsystem, outputsystem, '<span style="color:red;">', '</span>');
+  let convertedLine = convertLine(input, inputsystem, outputsystem, superscript, '<span style="color:red;">', '</span>');
   console.log(convertedLine);
   document.getElementById("outputdiv").innerHTML = convertedLine;
 });
