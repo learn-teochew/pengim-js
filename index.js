@@ -1,10 +1,18 @@
+#!/usr/bin/env node
+
 import commander from "commander";
+import fs from "fs";
 import readline from "readline";
 import { convertLine } from "./src/pengim.js";
 
 commander
   .version("1.0.0", "-v, --version")
+  .description("Convert between Teochew romanization systems")
   .usage("[OPTIONS]...")
+  .option(
+    "-i, --input <path>",
+    "Path to file containing input text to convert",
+  )
   .option(
     "-f, --from <name>",
     "Scheme to convert from: puj, gdpi, ggn, dieghv, fielde",
@@ -26,33 +34,41 @@ const systems = ["puj", "gdpi", "ggn", "dieghv", "fielde"];
 
 // Main ----------------------------------------------------------------------
 
-// Create a readline interface to read lines from stdin
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-if (!options.from && !options.to) {
-  console.error("Please specify -f and -t, see help with option -h");
-  process.exit(1);
+if ( !systems.includes(options.from) ) {
+  console.error("Unrecognized input format");
+  console.error();
+  commander.help();
 }
 
-// Prompt user to enter lines
-rl.question("Enter input (press CTRL+C to exit): ", (lines) => {
-  // Split the lines by newline character
-  const linesArr = lines.split("\n");
-  // Loop through each line and apply convertLine function
-  for (let i = 0; i < linesArr.length; i++) {
-    let out = "";
-    out = convertLine(
-      linesArr[i],
-      options.from,
-      options.to,
-      options.superscript,
-    );
-    console.log(out);
-  }
+if ( !systems.includes(options.to) ) {
+  console.error("Unrecognized output format");
+  console.error();
+  commander.help();
+}
 
-  // Close the readline interface
-  rl.close();
-});
+async function processLine(input) {
+  try {
+    const filestream = fs.createReadStream(input);
+    const rl = readline.createInterface({
+      input: filestream,
+      crlfDelay: Infinity,
+    });
+
+    for await ( const line of rl ) {
+      let out = "";
+      out = convertLine(
+        line,
+        options.from,
+        options.to,
+        options.superscript,
+      );
+      console.log(out);
+    }
+  } catch ( err ) {
+    console.error("Invalid input or no input file specified");
+    console.error();
+    commander.help();
+  }
+}
+
+processLine(options.input);
