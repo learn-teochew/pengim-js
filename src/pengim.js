@@ -9,39 +9,38 @@ import * as pujtones from "./data-tones-puj.js";
 import * as fieldetones from "./data-tones-fielde.js";
 
 const alldata = {
-  'gdpi' : gdpi,
-  'ggn' : ggn,
-  'dieghv' : dieghv,
-  'fielde' : fielde,
-  'ipa' : ipa,
-  'pujtones' : pujtones,
-  'fieldetones' : fieldetones
-}
+  gdpi: gdpi,
+  ggn: ggn,
+  dieghv: dieghv,
+  fielde: fielde,
+  ipa: ipa,
+  pujtones: pujtones,
+  fieldetones: fieldetones,
+};
 
 const superscriptnum = {
-  0 : "",
-  1 : "¹",
-  2 : "²",
-  3 : "³",
-  4 : "⁴",
-  5 : "⁵",
-  6 : "⁶",
-  7 : "⁷",
-  8 : "⁸"
-}
+  0: "",
+  1: "¹",
+  2: "²",
+  3: "³",
+  4: "⁴",
+  5: "⁵",
+  6: "⁶",
+  7: "⁷",
+  8: "⁸",
+};
 
 const ipatones = {
-  0 : "",
-  1 : "˧",
-  2 : "˥˧",
-  3 : "˨˩˧",
-  4 : "˨.",
-  5 : "˥",
-  6 : "˧˥",
-  7 : "˩",
-  8 : "˥."
-}
-
+  0: "",
+  1: "˧",
+  2: "˥˧",
+  3: "˨˩˧",
+  4: "˨.",
+  5: "˥",
+  6: "˧˥",
+  7: "˩",
+  8: "˥.",
+};
 
 // Functions ------------------------------------------------------------------
 
@@ -54,11 +53,16 @@ function checkCase(text) {
   let matchLuFirst = text[0].match(/\p{Lu}/gu);
   let matchLl = text.match(/\p{Ll}/gu);
   let capstatus = "";
-  if ( matchLu && matchLuFirst && matchLuFirst.length == 1 && matchLu.length == 1) {
+  if (
+    matchLu &&
+    matchLuFirst &&
+    matchLuFirst.length == 1 &&
+    matchLu.length == 1
+  ) {
     capstatus = "initial";
-  } else if ( matchLu && !matchLl ) {
+  } else if (matchLu && !matchLl) {
     capstatus = "upper";
-  } else if ( matchLl && !matchLu ) {
+  } else if (matchLl && !matchLu) {
     capstatus = "lower";
   } else {
     capstatus = "mIxEd";
@@ -77,8 +81,13 @@ function segmentPujSyllable(syllable) {
     res[2] = "";
   }
   // ng finals with no vowel
-  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
-    res[1] = res[1].slice(0,-2);
+  if (
+    res[1].endsWith("ng") &&
+    res[1].length > 2 &&
+    res[2] == "" &&
+    res[3] == ""
+  ) {
+    res[1] = res[1].slice(0, -2);
     res[3] = "ng";
   }
   // TODO solitary m, ngh, hngh
@@ -88,7 +97,7 @@ function segmentPujSyllable(syllable) {
 function parsePujSyllable(syllable) {
   let strippedWord = "";
   let toneNumber = 0;
-  let wordNormalized = syllable.normalize('NFD');
+  let wordNormalized = syllable.normalize("NFD");
   for (let i = 0; i < wordNormalized.length; i++) {
     let char = wordNormalized[i];
     let charCode = char.charCodeAt(0);
@@ -107,7 +116,7 @@ function parsePujSyllable(syllable) {
       strippedWord += char;
     }
   }
-  let res = segmentPujSyllable(strippedWord)
+  let res = segmentPujSyllable(strippedWord);
   if (toneNumber == 0) {
     if (res[3].match(/[hpkt]/)) {
       toneNumber = 4;
@@ -136,17 +145,22 @@ function segmentFieldeSyllable(syllable) {
     res[2] = "";
   }
   // ng finals with no vowel
-  if (res[1].endsWith("ng") && res[1].length > 2 && res[2] == "" && res[3] == "") {
-    res[1] = res[1].slice(0,-2);
+  if (
+    res[1].endsWith("ng") &&
+    res[1].length > 2 &&
+    res[2] == "" &&
+    res[3] == ""
+  ) {
+    res[1] = res[1].slice(0, -2);
     res[3] = "ng";
   }
-  let [initial, medial, coda] = ["","",""];
-  if ( res[1] in fielde.initialToPuj ) {
+  let [initial, medial, coda] = ["", "", ""];
+  if (res[1] in fielde.initialToPuj) {
     initial = fielde.initialToPuj[res[1]];
   } else {
     throw new Error("Initial not recognized: " + initial);
   }
-  if ( res[2] + res[3] in fielde.finalToPuj ) {
+  if (res[2] + res[3] in fielde.finalToPuj) {
     [medial, coda] = fielde.finalToPuj[res[2] + res[3]];
   } else {
     throw new Error("Final not recognized: " + res[2] + res[3]);
@@ -157,7 +171,7 @@ function segmentFieldeSyllable(syllable) {
 function parseFieldeSyllable(syllable) {
   let strippedWord = "";
   let toneNumber = 0;
-  let wordNormalized = syllable.normalize('NFD');
+  let wordNormalized = syllable.normalize("NFD");
   for (let i = 0; i < wordNormalized.length; i++) {
     let char = wordNormalized[i];
     let charCode = char.charCodeAt(0);
@@ -193,11 +207,10 @@ function parseFieldeSyllable(syllable) {
   return [res[1], res[2], res[3], toneNumber];
 }
 
-
 function parseGdpiLikeSyllable(syllable, system) {
   // TODO handle error if syllable does not match regex
-  let res = syllable.normalize('NFC').match(alldata[system].syllableRe);
-  let [initial, medial, coda, tonenumber] = res.slice(1,5);
+  let res = syllable.normalize("NFC").match(alldata[system].syllableRe);
+  let [initial, medial, coda, tonenumber] = res.slice(1, 5);
   // Fix cases not caught by regex
   // analyze solitary "ng" as final
   if (initial == "ng" && medial == "" && coda == "") {
@@ -206,22 +219,27 @@ function parseGdpiLikeSyllable(syllable, system) {
     medial = "";
   }
   // ng finals with no vowel, e.g. cng1
-  if (initial.endsWith("ng") && initial.length > 2 && medial == "" && coda == "") {
-    initial = initial.slice(0,-2);
+  if (
+    initial.endsWith("ng") &&
+    initial.length > 2 &&
+    medial == "" &&
+    coda == ""
+  ) {
+    initial = initial.slice(0, -2);
     coda = "ng";
   }
   // Convert to PUJ + numeric tone
-  if ( initial in alldata[system].initialToPuj ) {
+  if (initial in alldata[system].initialToPuj) {
     initial = alldata[system].initialToPuj[initial];
   } else {
     throw new Error("Initial not recognized: " + initial);
   }
-  if ( medial in alldata[system].medialToPuj ) {
+  if (medial in alldata[system].medialToPuj) {
     medial = alldata[system].medialToPuj[medial];
   } else {
     throw new Error("Medial not recognized: " + medial);
   }
-  if ( coda in alldata[system].codaToPuj ) {
+  if (coda in alldata[system].codaToPuj) {
     coda = alldata[system].codaToPuj[coda];
   } else {
     throw new Error("Coda not recognized: " + coda);
@@ -253,38 +271,38 @@ class Syllable {
 
   returnIpa() {
     let nasal = false;
-    let [ initial, medial, coda ] = [ this.initial, this.medial, this.coda ];
-    if ( this.coda.includes("ⁿ") ) {
+    let [initial, medial, coda] = [this.initial, this.medial, this.coda];
+    if (this.coda.includes("ⁿ")) {
       nasal = true;
       coda = this.coda.replace("ⁿ", "");
     }
-    if ( initial in alldata['ipa'].initialFromPuj ) {
-      initial = alldata['ipa'].initialFromPuj[initial];
+    if (initial in alldata["ipa"].initialFromPuj) {
+      initial = alldata["ipa"].initialFromPuj[initial];
     } else {
       throw new Error("Initial not recognized: " + initial);
     }
-    if ( medial in alldata['ipa'].medialFromPuj ) {
-      if ( nasal ) {
+    if (medial in alldata["ipa"].medialFromPuj) {
+      if (nasal) {
         medial = "";
-        for ( let i = 0; i < this.medial.length; i++ ) {
+        for (let i = 0; i < this.medial.length; i++) {
           medial += this.medial[i] + String.fromCodePoint("0x0303");
         }
       } else {
-        medial = alldata['ipa'].medialFromPuj[this.medial];
+        medial = alldata["ipa"].medialFromPuj[this.medial];
       }
     } else {
       throw new Error("Medial not recognized: " + medial);
     }
-    if ( coda in alldata['ipa'].codaFromPuj ) {
-      coda = alldata['ipa'].codaFromPuj[coda];
+    if (coda in alldata["ipa"].codaFromPuj) {
+      coda = alldata["ipa"].codaFromPuj[coda];
     } else {
       throw new Error("Coda not recognized: " + coda);
     }
     let toneletter = "";
-    if ( this.tonenumber in ipatones ) {
+    if (this.tonenumber in ipatones) {
       toneletter = ipatones[this.tonenumber];
     }
-    return [ initial, medial, coda, toneletter ].join("");
+    return [initial, medial, coda, toneletter].join("");
   }
 
   returnPuj() {
@@ -292,9 +310,9 @@ class Syllable {
     return addToneDiacriticPujLike(toneless, this.tonenumber, pujtones);
   }
 
-  returnPujn(superscript=false) {
+  returnPujn(superscript = false) {
     let tonenumber = this.tonenumber;
-    if ( superscript ) {
+    if (superscript) {
       tonenumber = superscriptnum[this.tonenumber];
     }
     return [this.initial, this.medial, this.coda, tonenumber].join("");
@@ -304,13 +322,13 @@ class Syllable {
     let pujFinal = this.medial + this.coda;
     let fieldeInitial = "";
     let fieldeFinal = "";
-    if ( this.initial in alldata['fielde'].initialFromPuj ) {
-      fieldeInitial = alldata['fielde'].initialFromPuj[this.initial];
+    if (this.initial in alldata["fielde"].initialFromPuj) {
+      fieldeInitial = alldata["fielde"].initialFromPuj[this.initial];
     } else {
       throw new Error("Initial not recognized: " + this.initial);
     }
-    if ( pujFinal in alldata['fielde'].finalFromPuj ) {
-      fieldeFinal = alldata['fielde'].finalFromPuj[pujFinal];
+    if (pujFinal in alldata["fielde"].finalFromPuj) {
+      fieldeFinal = alldata["fielde"].finalFromPuj[pujFinal];
     } else {
       throw new Error("Final not recognized: " + pujFinal);
     }
@@ -318,28 +336,28 @@ class Syllable {
     return addToneDiacriticPujLike(toneless, this.tonenumber, fieldetones);
   }
 
-  returnGdpiLike(system, superscript=false) {
+  returnGdpiLike(system, superscript = false) {
     // GDPI-like systems
     let initial = "";
     let medial = "";
     let coda = "";
-    if ( this.initial in alldata[system].initialFromPuj ) {
+    if (this.initial in alldata[system].initialFromPuj) {
       initial = alldata[system].initialFromPuj[this.initial];
     } else {
       throw new Error("Initial not recognized: " + this.initial);
     }
-    if ( this.medial in alldata[system].medialFromPuj ) {
+    if (this.medial in alldata[system].medialFromPuj) {
       medial = alldata[system].medialFromPuj[this.medial];
     } else {
       throw new Error("Medial not recognized: " + this.medial);
     }
-    if ( this.coda in alldata[system].codaFromPuj ) {
+    if (this.coda in alldata[system].codaFromPuj) {
       coda = alldata[system].codaFromPuj[this.coda];
     } else {
       throw new Error("Coda not recognized: " + this.coda);
     }
     let tonenumber = this.tonenumber;
-    if ( superscript ) {
+    if (superscript) {
       tonenumber = superscriptnum[this.tonenumber];
     }
     return [initial, medial, coda, tonenumber].join("");
@@ -347,27 +365,26 @@ class Syllable {
 
   convert(system, superscript) {
     let out = "";
-    if ( system == "puj" ) {
+    if (system == "puj") {
       out = this.returnPuj();
-    } else if ( system == "pujn" ) {
-      out =  this.returnPujn(superscript);
-    } else if ( ["gdpi","ggn","dieghv"].includes(system) ) {
-      out =  this.returnGdpiLike(system, superscript);
-    } else if ( system == "fielde" ) {
-      out =  this.returnFielde();
-    } else if (system == "ipa" ) {
-      out =  this.returnIpa();
+    } else if (system == "pujn") {
+      out = this.returnPujn(superscript);
+    } else if (["gdpi", "ggn", "dieghv"].includes(system)) {
+      out = this.returnGdpiLike(system, superscript);
+    } else if (system == "fielde") {
+      out = this.returnFielde();
+    } else if (system == "ipa") {
+      out = this.returnIpa();
     } else {
       throw new Error("Unrecognized system " + system);
     }
-    if ( this.verbatimCase == "initial" && system != "ipa" ) {
-      out = out[0].toUpperCase() + out.slice(1,);
-    } else if ( this.verbatimCase == "upper" && system != "ipa" ) {
+    if (this.verbatimCase == "initial" && system != "ipa") {
+      out = out[0].toUpperCase() + out.slice(1);
+    } else if (this.verbatimCase == "upper" && system != "ipa") {
       out = out.toUpperCase();
     }
     return out;
   }
-
 }
 
 function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
@@ -385,10 +402,10 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
   } else {
     throw new Error("Cannot place tone diacritic on " + toneless);
   }
-  let pre = toneless.slice(0,toneLetterIndex+1);
+  let pre = toneless.slice(0, toneLetterIndex + 1);
   let post = "";
   if (toneless.length > toneLetterIndex + 1) {
-    post = toneless.slice(toneLetterIndex+1,);
+    post = toneless.slice(toneLetterIndex + 1);
   }
   // Default no diacritic for tones 1 and 4
   let toneDiacritic = "";
@@ -402,31 +419,54 @@ function addToneDiacriticPujLike(toneless, tonenumber, tonedata) {
 
 // Apply conversion to each segmented element ("word")
 // Add delimiters around words that cannot be converted
-function convertWord(word, from="puj", to="gdpi", superscript, invalidLeftDelim, invalidRightDelim) {
+function convertWord(
+  word,
+  from = "puj",
+  to = "gdpi",
+  superscript,
+  invalidLeftDelim,
+  invalidRightDelim,
+) {
   try {
     let syllable = new Syllable(word, from);
     // console.log(syllable);
     return syllable.convert(to, superscript);
-  } catch(e) {
+  } catch (e) {
     console.error(e.name + ": " + e.message);
     return invalidLeftDelim + word + invalidRightDelim;
   }
 }
 
 // Apply conversion to entire line
-function convertLine(line, from="puj", to="gdpi", superscript=false, invalidLeftDelim="[", invalidRightDelim="]") {
+function convertLine(
+  line,
+  from = "puj",
+  to = "gdpi",
+  superscript = false,
+  invalidLeftDelim = "[",
+  invalidRightDelim = "]",
+) {
   let result = [];
   let splitRe = /(\p{P}|\p{Z}|\n)/gu;
   let linesplit = line.split(splitRe);
-  for ( const word of linesplit ) {
-    if ( word.match(splitRe) ) {
+  for (const word of linesplit) {
+    if (word.match(splitRe)) {
       // punctuation or space only
       result.push(word);
-    } else if ( word.match(/^\d+$/) ) {
+    } else if (word.match(/^\d+$/)) {
       // numeral only
       result.push(word);
-    } else 
-      result.push(convertWord(word, from, to, superscript, invalidLeftDelim, invalidRightDelim));
+    } else
+      result.push(
+        convertWord(
+          word,
+          from,
+          to,
+          superscript,
+          invalidLeftDelim,
+          invalidRightDelim,
+        ),
+      );
   }
   return result.join("");
 }
