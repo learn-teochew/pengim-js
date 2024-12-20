@@ -456,7 +456,7 @@ function convertLine(
     } else if (word.match(/^\d+$/)) {
       // numeral only
       result.push(word);
-    } else
+    } else if (word.length > 0) {
       result.push(
         convertWord(
           word,
@@ -467,6 +467,7 @@ function convertLine(
           invalidRightDelim,
         ),
       );
+    }
   }
   return result.join("");
 }
