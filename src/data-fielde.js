@@ -122,11 +122,12 @@ export const initialFromPuj = {
   "b"   : "b"  ,
   "ts"  : "c"  ,
   "tsh" : "ch" ,
-  "ch"  : "c"  , // Fielde does not distinguish
-  "chh" : "ch" , // Fielde does not distinguish
+  "ch"  : "c"  , // Fielde does not distinguish from ts
+  "chh" : "ch" , // Fielde does not distinguish from tsh
   "g"   : "g"  ,
   "h"   : "h"  ,
   "j"   : "j"  ,
+  "z"   : "j"  , // Fielde does not distinguish from j
   "k"   : "k"  ,
   "kh"  : "kh" ,
   "l"   : "l"  ,
@@ -234,6 +235,8 @@ export const finalFromPuj = {
   "ṳn"   : "ṳn"   ,
   "ṳt"   : "ṳt"   ,
   "uen"  : "wn"   ,
+  "uan"  : "wn"   , // inconsistency vs -uang, merger with -uet?
   "ueng" : "wng"  , // not in Fielde
+  "uat"  : "wt"   , // merger with uet?
   "uet"  : "wt"
 }
