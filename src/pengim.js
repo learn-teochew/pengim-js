@@ -89,16 +89,12 @@ function fixFinalsExceptions(initial, medial, coda) {
   }
   // ngh finals with no vowel, e.g. hngh
   // Analyze ngh as final, not ng+h
-  if (
-    initial.endsWith("ngh") &&
-    medial == "" &&
-    coda == ""
-  ) {
+  if (initial.endsWith("ngh") && medial == "" && coda == "") {
     initial = initial.slice(0, -3);
     coda = "ngh";
   }
   // solitary m
-  if ( initial == "m" && medial == "" && coda == "" ) {
+  if (initial == "m" && medial == "" && coda == "") {
     coda = "m";
     initial = "";
     medial = "";
@@ -107,10 +103,14 @@ function fixFinalsExceptions(initial, medial, coda) {
 }
 
 function segmentPujSyllable(syllable) {
-  // TODO handle error if syllable does not match regex
   const pujRe = /^([phbmtnlsczjdkg]*)([aeiouṳ]*)([hptkmngⁿ]*)$/;
-  let res = syllable.match(pujRe);
-  [res[1], res[2], res[3]] = fixFinalsExceptions(res[1], res[2], res[3]);
+  let res = [];
+  try {
+    res = syllable.match(pujRe);
+    [res[1], res[2], res[3]] = fixFinalsExceptions(res[1], res[2], res[3]);
+  } catch (err) {
+    throw new Error("Syllable does not match PUJ regex: " + syllable);
+  }
   return res;
 }
 
@@ -156,8 +156,12 @@ function parsePujnSyllable(syllable) {
 }
 
 function segmentFieldeSyllable(syllable) {
-  // TODO handle error if syllable does not match regex
-  let res = syllable.match(fielde.syllableRe);
+  let res = [];
+  try {
+    res = syllable.match(fielde.syllableRe);
+  } catch (err) {
+    throw new Error("Syllable does not match Fielde regex: " + syllable);
+  }
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
     res[3] = "ng";
@@ -228,8 +232,14 @@ function parseFieldeSyllable(syllable) {
 }
 
 function parseGdpiLikeSyllable(syllable, system) {
-  // TODO handle error if syllable does not match regex
-  let res = syllable.normalize("NFC").match(alldata[system].syllableRe);
+  let res = [];
+  try {
+    res = syllable.normalize("NFC").match(alldata[system].syllableRe);
+  } catch (err) {
+    throw new Error(
+      "Syllable does not match " + system + " regex: " + syllable,
+    );
+  }
   let [initial, medial, coda, tonenumber] = res.slice(1, 5);
   // Fix cases not caught by regex
   [initial, medial, coda] = fixFinalsExceptions(initial, medial, coda);
@@ -435,7 +445,7 @@ function convertWord(
 ) {
   try {
     let syllable = new Syllable(word, from);
-    if ( debug ) {
+    if (debug) {
       console.log(syllable);
     }
     return syllable.convert(to, superscript);
