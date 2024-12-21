@@ -27,6 +27,10 @@ commander
     "-s, --superscript",
     "Superscript tone numbers (gdpi, ggn, dieghv only)",
   )
+  .option(
+    "-d, --debug",
+    "Print Syllable object",
+  )
   .parse(process.argv);
 
 const options = commander.opts();
@@ -61,6 +65,8 @@ async function processLine(input) {
         options.from,
         options.to,
         options.superscript,
+        "[", "]",
+        options.debug,
       );
       console.log(out);
     }

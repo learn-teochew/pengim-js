@@ -72,7 +72,7 @@ function checkCase(text) {
 
 function segmentPujSyllable(syllable) {
   // TODO handle error if syllable does not match regex
-  const pujRe = /^([^aeiouṳ]*)([aeiouṳ]*)([hptkmngⁿ]*)$/;
+  const pujRe = /^([phbmtnlsczjdkg]*)([aeiouṳ]*)([hptkmngⁿ]*)$/;
   let res = syllable.match(pujRe);
   // analyze solitary "ng" as final
   if (res[1] == "ng" && res[2] == "" && res[3] == "") {
@@ -426,10 +426,13 @@ function convertWord(
   superscript,
   invalidLeftDelim,
   invalidRightDelim,
+  debug = false,
 ) {
   try {
     let syllable = new Syllable(word, from);
-    // console.log(syllable);
+    if ( debug ) {
+      console.log(syllable);
+    }
     return syllable.convert(to, superscript);
   } catch (e) {
     console.error(e.name + ": " + e.message);
@@ -445,6 +448,7 @@ function convertLine(
   superscript = false,
   invalidLeftDelim = "[",
   invalidRightDelim = "]",
+  debug = false,
 ) {
   let result = [];
   let splitRe = /(\p{P}|\p{Z}|\n)/gu;
@@ -465,6 +469,7 @@ function convertLine(
           superscript,
           invalidLeftDelim,
           invalidRightDelim,
+          debug,
         ),
       );
     }
