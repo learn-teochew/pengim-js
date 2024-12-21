@@ -59,6 +59,7 @@ export const codaFromPuj = {
   "m"  : "m" ,
   "n"  : "ng",
   "ng" : "ng",
+  "ngh" : "ngh",
   "t"  : "g" ,
   "k"  : "g" ,
   "ⁿ"  : "n" ,
@@ -119,6 +120,7 @@ export const codaToPuj = {
   "b" : "p"  ,
   "m" : "m"  ,
   "ng": "ng" ,
+  "ngh": "ngh" ,
   "g" : "k"  ,
   "n" : "ⁿ"  ,
   "nh": "ⁿh" 

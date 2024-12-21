@@ -53,15 +53,16 @@ export const medialFromPuj = {
 }
 
 export const codaFromPuj = {
-  ""   : ""  ,
-  "h"  : "h" ,
-  "p"  : "p" ,
-  "m"  : "m" ,
-  "n"  : "ng",
-  "ng" : "ng",
-  "t"  : "k" ,
-  "k"  : "k" ,
-  "ⁿ"  : "n" ,
+  ""   : ""   ,
+  "h"  : "h"  ,
+  "p"  : "p"  ,
+  "m"  : "m"  ,
+  "n"  : "ng" ,
+  "ng" : "ng" ,
+  "ngh": "ngh",
+  "t"  : "k"  ,
+  "k"  : "k"  ,
+  "ⁿ"  : "n"  ,
   "ⁿh" : "nh"
 }
 
@@ -114,12 +115,12 @@ export const medialToPuj = {
 }
 
 export const codaToPuj = {
-  ""  : ""   ,
-  "h" : "h"  ,
-  "p" : "p"  ,
-  "m" : "m"  ,
-  "ng": "ng" ,
-  "k" : "k"  ,
-  "n" : "ⁿ"  ,
-  "nh": "ⁿh" 
+  ""   : ""   ,
+  "h"  : "h"  ,
+  "p"  : "p"  ,
+  "m"  : "m"  ,
+  "ngh": "ngh",
+  "k"  : "k"  ,
+  "n"  : "ⁿ"  ,
+  "nh" : "ⁿh" 
 }

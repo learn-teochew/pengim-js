@@ -70,27 +70,47 @@ function checkCase(text) {
   return capstatus;
 }
 
+function fixFinalsExceptions(initial, medial, coda) {
+  // analyze solitary "ng" as final
+  if (initial == "ng" && medial == "" && coda == "") {
+    coda = "ng";
+    initial = "";
+    medial = "";
+  }
+  // ng finals with no vowel
+  if (
+    initial.endsWith("ng") &&
+    initial.length > 2 &&
+    medial == "" &&
+    coda == ""
+  ) {
+    initial = initial.slice(0, -2);
+    coda = "ng";
+  }
+  // ngh finals with no vowel, e.g. hngh
+  // Analyze ngh as final, not ng+h
+  if (
+    initial.endsWith("ngh") &&
+    medial == "" &&
+    coda == ""
+  ) {
+    initial = initial.slice(0, -3);
+    coda = "ngh";
+  }
+  // solitary m
+  if ( initial == "m" && medial == "" && coda == "" ) {
+    coda = "m";
+    initial = "";
+    medial = "";
+  }
+  return [initial, medial, coda];
+}
+
 function segmentPujSyllable(syllable) {
   // TODO handle error if syllable does not match regex
   const pujRe = /^([phbmtnlsczjdkg]*)([aeiouṳ]*)([hptkmngⁿ]*)$/;
   let res = syllable.match(pujRe);
-  // analyze solitary "ng" as final
-  if (res[1] == "ng" && res[2] == "" && res[3] == "") {
-    res[3] = "ng";
-    res[1] = "";
-    res[2] = "";
-  }
-  // ng finals with no vowel
-  if (
-    res[1].endsWith("ng") &&
-    res[1].length > 2 &&
-    res[2] == "" &&
-    res[3] == ""
-  ) {
-    res[1] = res[1].slice(0, -2);
-    res[3] = "ng";
-  }
-  // TODO solitary m, ngh, hngh
+  [res[1], res[2], res[3]] = fixFinalsExceptions(res[1], res[2], res[3]);
   return res;
 }
 
@@ -212,22 +232,7 @@ function parseGdpiLikeSyllable(syllable, system) {
   let res = syllable.normalize("NFC").match(alldata[system].syllableRe);
   let [initial, medial, coda, tonenumber] = res.slice(1, 5);
   // Fix cases not caught by regex
-  // analyze solitary "ng" as final
-  if (initial == "ng" && medial == "" && coda == "") {
-    coda = "ng";
-    initial = "";
-    medial = "";
-  }
-  // ng finals with no vowel, e.g. cng1
-  if (
-    initial.endsWith("ng") &&
-    initial.length > 2 &&
-    medial == "" &&
-    coda == ""
-  ) {
-    initial = initial.slice(0, -2);
-    coda = "ng";
-  }
+  [initial, medial, coda] = fixFinalsExceptions(initial, medial, coda);
   // Convert to PUJ + numeric tone
   if (initial in alldata[system].initialToPuj) {
     initial = alldata[system].initialToPuj[initial];

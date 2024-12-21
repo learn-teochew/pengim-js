@@ -162,7 +162,8 @@ export const finalFromPuj = {
   "ek"   : "ek"   ,
   "eng"  : "eng"  ,
   "eⁿ"   : "eⁿ"   ,
-  "ng"  : "ng"   ,
+  "ng"   : "ng"   ,
+  "ngh"  : "ngh"  , // Not in Fielde
   "i"    : "i"    ,
   "ia"   : "ia"   ,
   "iah"  : "iah"  ,

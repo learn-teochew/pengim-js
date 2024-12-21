@@ -22,4 +22,3 @@ Online at: https://learnteochew.com/pengim-js/
 ## TODO
 
 * Regional accents
-* Fix `hngh`, and `m` as final

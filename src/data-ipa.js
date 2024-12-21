@@ -57,6 +57,7 @@ export const codaFromPuj = {
   "m"  : "m" ,
   "n"  : "n",
   "ng" : "ŋ",
+  "ngh" : "ŋʔ",
   "t"  : "t" ,
   "k"  : "k" 
   // "ⁿ"  : "n" , // nasals handled manually
