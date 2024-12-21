@@ -71,6 +71,7 @@ function checkCase(text) {
 }
 
 function fixFinalsExceptions(initial, medial, coda) {
+  // Common to all supported romanization schemes
   // analyze solitary "ng" as final
   if (initial == "ng" && medial == "" && coda == "") {
     coda = "ng";
@@ -162,32 +163,16 @@ function segmentFieldeSyllable(syllable) {
   } catch (err) {
     throw new Error("Syllable does not match Fielde regex: " + syllable);
   }
-  // analyze solitary "ng" as final
-  if (res[1] == "ng" && res[2] == "" && res[3] == "") {
-    res[3] = "ng";
-    res[1] = "";
-    res[2] = "";
-  }
-  // ng finals with no vowel
-  if (
-    res[1].endsWith("ng") &&
-    res[1].length > 2 &&
-    res[2] == "" &&
-    res[3] == ""
-  ) {
-    res[1] = res[1].slice(0, -2);
-    res[3] = "ng";
-  }
-  let [initial, medial, coda] = ["", "", ""];
-  if (res[1] in fielde.initialToPuj) {
-    initial = fielde.initialToPuj[res[1]];
+  let [initial, medial, coda] = fixFinalsExceptions(res[1], res[2], res[3]);
+  if (initial in fielde.initialToPuj) {
+    initial = fielde.initialToPuj[initial];
   } else {
     throw new Error("Initial not recognized: " + initial);
   }
-  if (res[2] + res[3] in fielde.finalToPuj) {
-    [medial, coda] = fielde.finalToPuj[res[2] + res[3]];
+  if (medial + coda in fielde.finalToPuj) {
+    [medial, coda] = fielde.finalToPuj[medial + coda];
   } else {
-    throw new Error("Final not recognized: " + res[2] + res[3]);
+    throw new Error("Final not recognized: " + medial + coda);
   }
   return [syllable, initial, medial, coda];
 }
