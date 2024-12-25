@@ -1,9 +1,14 @@
+@font-face {
+  font-family: GentiumPlusW;
+  src: url("GentiumPlus-Regular.woff");
+}
+
 body {
   font-size: 1.1rem;
 }
 
 body {
-  font-family: "Gentium Plus", serif;
+  font-family: GentiumPlusW, serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -62,7 +67,7 @@ div {
 
 #ipadiv {
   font-size: 1em;
-  font-family: "Noto Sans", sans-serif;
+  font-family: GentiumPlusW, sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;

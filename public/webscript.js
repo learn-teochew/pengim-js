@@ -1,4 +1,4 @@
-import { convertLine } from "./src/pengim.js";
+import { convertLine } from "./../src/pengim.js";
 
 // first button element
 let button = document.getElementById("convertbutton");
