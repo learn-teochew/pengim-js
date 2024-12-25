@@ -22,3 +22,12 @@ Online at: https://learnteochew.com/pengim-js/
 ## TODO
 
 * Regional accents
+
+
+## License
+
+The [Gentium Plus font](https://software.sil.org/gentium/) is used under terms
+of the [SIL Open Font License](https://openfontlicense.org/)
+
+`pengim-js` is (c) 2024, Brandon Seah / LearnTeochew.com and is released under
+the MIT License.
