@@ -451,7 +451,7 @@ function convertLine(
   debug = false,
 ) {
   let result = [];
-  let splitRe = /(\p{P}|\p{Z}|\n)/gu;
+  let splitRe = /(\p{P}|\p{Z}|\p{WSpace}|\n)/gu;
   let linesplit = line.split(splitRe);
   for (const word of linesplit) {
     if (word.match(splitRe)) {
